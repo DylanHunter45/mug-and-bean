@@ -1,0 +1,9 @@
+# Generated benchmark reports — re-runnable, not source of truth.
+results/
+
+# Real label images. They can be large and are not needed to read the code;
+# they are reproducible from the physical label collection.
+# Keep the directory and its docs in git, ignore the binaries.
+labels/*
+!labels/README.md
+!labels/.gitkeep

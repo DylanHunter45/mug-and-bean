@@ -1,0 +1,19 @@
+# Build output
+.next/
+out/
+build/
+
+# Dependencies
+node_modules/
+
+# Lockfiles
+package-lock.json
+
+# Misc
+*.log
+coverage/
+
+# Source-of-truth docs and tooling config — not ours to reformat
+docs/*.md
+CLAUDE.md
+.claude/

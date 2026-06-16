@@ -1,0 +1,52 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+
+# Next.js
+/.next/
+/out/
+
+# Production build
+/build
+
+# Testing / coverage
+/coverage
+
+# Environment files (never commit secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Claude Code per-developer local settings (shared .claude/settings.json is fine)
+.claude/settings.local.json
+# Local runtime flag used by /closeapp + the dev-server auto-start hook
+.claude/.devserver-paused
+
+# Internal planning / strategy docs and the agent working guide — kept on disk
+# locally but not published to the public repo.
+/docs/
+/CLAUDE.md

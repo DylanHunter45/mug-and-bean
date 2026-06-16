@@ -1,0 +1,51 @@
+name: CI
+
+# Runs the quality gate (lint + type-check + unit tests + build) on every push
+# to any branch and on every pull request targeting main. Vercel handles the
+# deploy half of the pipeline (preview per PR, production on merge to main) via
+# its native GitHub integration — see docs/deployment.md.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+# A newer push to the same ref cancels an in-flight run, so a branch with an
+# open PR doesn't burn minutes running the same commit twice.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, type-check, test & build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run type-check
+
+      - name: Unit tests
+        run: npm run test
+
+      # Catches build-time errors before Vercel does. Public env vars are
+      # injected as build args; CI uses inert placeholders so the build never
+      # depends on real secrets (those live only in Vercel — see deployment.md).
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000

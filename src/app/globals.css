@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Mug & Bean — "Cupping Table" design system.
+ *
+ * Specialty coffee's real culture is analytical: cupping scores, flavour
+ * wheels, altitude, process. The aesthetic leans into coffee-as-instrument —
+ * a dark-roast canvas, raw GREEN-bean jade as the primary accent (the
+ * deliberate break from the brown/terracotta cliché), and amber for
+ * extraction/crema highlights. Data speaks in monospace, like a spec card.
+ *
+ * Tokens are RGB channels so Tailwind's `/<alpha>` opacity modifiers work
+ * (e.g. `bg-jade/15`). Reference semantic names, never raw hex.
+ */
+:root {
+  color-scheme: dark;
+
+  --canvas: 22 17 13; /* #16110d — dark-roast page background */
+  --surface: 34 26 19; /* #221a13 — raised cards / panels */
+  --surface-2: 43 32 24; /* #2b2018 — inputs, nested surfaces */
+  --line: 51 39 28; /* #33271c — hairline borders / dividers */
+  --cream: 244 236 224; /* #f4ece0 — primary text */
+  --muted: 169 150 131; /* #a99683 — secondary text (6.6:1 on canvas) */
+  --muted-bright: 195 179 160; /* #c3b3a0 — brighter secondary text */
+  --jade: 91 196 137; /* #5bc489 — primary accent (green coffee) */
+  --jade-bright: 122 211 163; /* #7ad3a3 — hover / emphasis */
+  --amber: 230 163 60; /* #e6a33c — secondary accent (extraction) */
+}
+
+body {
+  @apply bg-canvas font-sans text-cream antialiased;
+  /* Atmosphere: two faint accent glows over the dark roast, fixed so the
+     page reads as a lit cupping table rather than a flat fill. */
+  background-image:
+    radial-gradient(
+      60rem 40rem at 78% -10%,
+      rgb(var(--jade) / 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      50rem 40rem at 0% 8%,
+      rgb(var(--amber) / 0.07),
+      transparent 55%
+    );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+@layer base {
+  /* Headings carry the display face; data/labels use mono — set per element. */
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* One orchestrated page-load: elements start hidden and rise into place.
+     Stagger via an inline `style={{ animationDelay }}`. */
+  .reveal {
+    opacity: 0;
+    animation: reveal 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  /* Faint hand-ruled hairline grid, like a cupping form. */
+  .ruled {
+    background-image:
+      linear-gradient(rgb(var(--line) / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--line) / 0.5) 1px, transparent 1px);
+    background-size: 2.5rem 2.5rem;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect reduced-motion: show everything, drop the movement. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
