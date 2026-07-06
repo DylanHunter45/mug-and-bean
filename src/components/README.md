@@ -12,32 +12,41 @@ Import from the barrel:
 import { Button, Input, Badge, Container, Section } from "@/components/ui";
 ```
 
+**Live gallery:** every primitive, in every variant, with live WCAG ratios, is
+rendered at [`/styleguide`](../app/styleguide/page.tsx) (dev/internal, `noindex`).
+Resize it to sanity-check the 375 / 768 / 1280px breakpoints, or point axe /
+Lighthouse at it.
+
 ---
 
 ## Design tokens
 
-| Token group  | Values                                                                                                                           | Notes                                                                     |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Surfaces     | `paper` `surface` `surface-2` `line`                                                                                             | Warm latte-paper page → warm off-white cards → input wells → hairlines.   |
-| Text         | `ink` (primary) · `ink-soft` (secondary body) · `muted` (labels/captions)                                                        | Use as `text-*`.                                                          |
-| Accents      | `cherry` / `cherry-deep` (fruit/brand) · `survey` (place/altitude) · `brass` (sweet)                                             | Accent **text** = `cherry-deep`/`survey`; fills carry white text.         |
-| Fonts        | `font-sans` (Hanken Grotesk) · `font-display` (Fraunces, serif) · `font-mono` (IBM Plex Mono)                                    | Mono is the **data voice**: scores, specs, catalogue nºs.                 |
-| Display text | `text-display-lg` `text-display` `text-display-sm` `text-eyebrow`                                                                | Serif headline scale with tuned tracking; `display-lg` is fluid.          |
-| Section pad  | `py-section-y` (80px) · `lg:py-section-y-lg` (128px)                                                                             | Used by `<Section>`.                                                      |
-| Radius       | `rounded-card` (1.25rem)                                                                                                         | Panels. Controls use `rounded-full`.                                      |
-| Shadow       | `shadow-card` · `shadow-glow`                                                                                                    | Light-theme lift; `glow` is the cherry hover halo.                        |
-| Motion       | `.reveal` (+ inline `animationDelay`) · `animate-reveal` · brew loops (`animate-drip/brew/stream/press/pour/steam/flame/needle`) | Page-load rise + the landing brew-diagram loops. All reduced-motion safe. |
-| Motifs       | `.topo` (contour rings) · `.ledger-rule` (ruled archive lines)                                                                   | Cartographic textures; pair decorative use with `aria-hidden`.            |
+| Token group  | Values                                                                                                                           | Notes                                                                                                                                   |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Surfaces     | `paper` `surface` `surface-2` `line`                                                                                             | Warm latte-paper page → warm off-white cards → input wells → hairlines.                                                                 |
+| Text         | `ink` (primary) · `ink-soft` (secondary body) · `muted` (labels/captions)                                                        | Use as `text-*`.                                                                                                                        |
+| Accents      | `cherry` / `cherry-deep` (fruit/brand) · `survey` (place/altitude) · `brass` / `brass-deep` (sweet)                              | Accent **text** = `cherry-deep` / `survey` / `brass-deep`; `brass` is fills/decoration only (fails AA as text); fills carry white text. |
+| Fonts        | `font-sans` (Hanken Grotesk) · `font-display` (Fraunces, serif) · `font-mono` (IBM Plex Mono)                                    | Mono is the **data voice**: scores, specs, catalogue nºs.                                                                               |
+| Display text | `text-display-lg` `text-display` `text-display-sm` `text-eyebrow`                                                                | Serif headline scale with tuned tracking; `display-lg` is fluid.                                                                        |
+| Section pad  | `py-section-y` (80px) · `lg:py-section-y-lg` (128px)                                                                             | Used by `<Section>`.                                                                                                                    |
+| Radius       | `rounded-card` (1.25rem)                                                                                                         | Panels. Controls use `rounded-full`.                                                                                                    |
+| Shadow       | `shadow-card` · `shadow-glow`                                                                                                    | Light-theme lift; `glow` is the cherry hover halo.                                                                                      |
+| Motion       | `.reveal` (+ inline `animationDelay`) · `animate-reveal` · brew loops (`animate-drip/brew/stream/press/pour/steam/flame/needle`) | Page-load rise + the landing brew-diagram loops. All reduced-motion safe.                                                               |
+| Motifs       | `.topo` (contour rings) · `.ledger-rule` (ruled archive lines)                                                                   | Cartographic textures; pair decorative use with `aria-hidden`.                                                                          |
 
 ### Accessibility / contrast
 
 Every text/background pairing used by these components passes **WCAG AA**
-(≥4.5:1 for body text). Verified ratios on warm `paper`: ink ~12:1, ink-soft
-~6.5:1, muted ~4.7:1, cherry-deep ~6.5:1, survey ~5.7:1; and **white** text on
-`cherry`/`survey` fills (~5.8:1 / ~6.5:1) is used for accent buttons and filled
-chips. Every interactive element has a visible `focus-visible` ring
-(`ring-cherry`). Motion respects `prefers-reduced-motion`. Verify with axe /
-Lighthouse.
+(≥4.5:1 for body text) — and this is **enforced in CI**, not just asserted here:
+[`src/lib/color/contrast.test.ts`](../lib/color/contrast.test.ts) parses the
+real tokens out of `globals.css` and fails the build if any documented pairing
+drops below AA. Verified ratios on warm `paper`: ink ~12:1, ink-soft ~6.5:1,
+muted ~5:1, cherry-deep ~5.5:1, survey ~4.9:1, brass-deep ~5.2:1; and **white**
+text on `cherry`/`survey` fills (~5.8:1 / ~6.6:1) for accent buttons and filled
+chips. (`brass` itself is ~2.9:1 on paper — fills/decoration only; use
+`brass-deep` for brass-toned text.) Every interactive element has a visible
+`focus-visible` ring (`ring-cherry`). Motion respects `prefers-reduced-motion`.
+Cross-check with axe / Lighthouse against `/styleguide`.
 
 ---
 

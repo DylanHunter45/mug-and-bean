@@ -29,7 +29,8 @@
   --cherry: 180 58 47; /* #b43a2f — primary accent (fruit / brand) */
   --cherry-deep: 157 42 31; /* #9d2a1f — accent text / hover (~6.5:1) */
   --survey: 60 98 112; /* #3c6270 — cartographic ink (place / altitude) */
-  --brass: 161 122 58; /* #a17a3a — sweetness / extraction data accent */
+  --brass: 161 122 58; /* #a17a3a — sweetness accent for FILLS/decoration only */
+  --brass-deep: 114 83 30; /* #72531e — brass as TEXT (AA: ~5.2:1 on paper) */
 
   /* Easing — natural deceleration, never bounce/elastic. */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
