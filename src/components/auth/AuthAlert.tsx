@@ -23,8 +23,8 @@ export function AuthAlert({
       className={cn(
         "rounded-lg border px-3 py-2 text-sm",
         error
-          ? "border-red-500/40 bg-red-500/10 text-red-300"
-          : "border-line bg-surface-2 text-muted-bright",
+          ? "border-red-600/30 bg-red-50 text-red-700"
+          : "border-line bg-surface-2 text-ink-soft",
       )}
     >
       {text}

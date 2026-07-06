@@ -23,7 +23,7 @@ export default function LoginPage({
   return (
     <div className="flex flex-col gap-6 rounded-card border border-line bg-surface p-6 shadow-card">
       <div className="flex flex-col gap-1">
-        <h2 className="text-xl font-semibold text-cream">Welcome back</h2>
+        <h2 className="text-xl font-semibold text-ink">Welcome back</h2>
         <p className="text-sm text-muted">Sign in to your cellar.</p>
       </div>
 
@@ -31,11 +31,11 @@ export default function LoginPage({
 
       <form action={signIn} className="flex flex-col gap-4">
         <input type="hidden" name="redirect" value={redirect} />
-        <label className="flex flex-col gap-1 text-sm font-medium text-cream">
+        <label className="flex flex-col gap-1 text-sm font-medium text-ink">
           Email
           <Input type="email" name="email" autoComplete="email" required />
         </label>
-        <label className="flex flex-col gap-1 text-sm font-medium text-cream">
+        <label className="flex flex-col gap-1 text-sm font-medium text-ink">
           Password
           <Input
             type="password"
@@ -65,7 +65,7 @@ export default function LoginPage({
               ? "/signup"
               : `/signup?redirect=${encodeURIComponent(redirect)}`
           }
-          className="font-medium text-jade hover:underline"
+          className="font-medium text-cherry-deep hover:underline"
         >
           Sign up
         </Link>

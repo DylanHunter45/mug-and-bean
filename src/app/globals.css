@@ -3,57 +3,81 @@
 @tailwind utilities;
 
 /*
- * Mug & Bean — "Cupping Table" design system.
+ * Mug & Bean — "Origin Ledger" design system.
  *
- * Specialty coffee's real culture is analytical: cupping scores, flavour
- * wheels, altitude, process. The aesthetic leans into coffee-as-instrument —
- * a dark-roast canvas, raw GREEN-bean jade as the primary accent (the
- * deliberate break from the brown/terracotta cliché), and amber for
- * extraction/crema highlights. Data speaks in monospace, like a spec card.
+ * Specialty coffee is defined by place and altitude, so the interface is a
+ * cartographic archive: cool rag-paper ground, graphite survey ink, a single
+ * pressed cherry-red flavour accent, and a survey-teal for the map/altitude
+ * motifs. Data speaks in monospace, like a catalogue card. See DESIGN.md.
  *
- * Tokens are RGB channels so Tailwind's `/<alpha>` opacity modifiers work
- * (e.g. `bg-jade/15`). Reference semantic names, never raw hex.
+ * Tokens are space-separated RGB channels so Tailwind's `/<alpha>` opacity
+ * modifiers work (e.g. `bg-cherry/10`). Reference semantic names, never hex.
  */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --canvas: 22 17 13; /* #16110d — dark-roast page background */
-  --surface: 34 26 19; /* #221a13 — raised cards / panels */
-  --surface-2: 43 32 24; /* #2b2018 — inputs, nested surfaces */
-  --line: 51 39 28; /* #33271c — hairline borders / dividers */
-  --cream: 244 236 224; /* #f4ece0 — primary text */
-  --muted: 169 150 131; /* #a99683 — secondary text (6.6:1 on canvas) */
-  --muted-bright: 195 179 160; /* #c3b3a0 — brighter secondary text */
-  --jade: 91 196 137; /* #5bc489 — primary accent (green coffee) */
-  --jade-bright: 122 211 163; /* #7ad3a3 — hover / emphasis */
-  --amber: 230 163 60; /* #e6a33c — secondary accent (extraction) */
+  /* Warm "latte paper" ground — soft on the eyes, coffee-toned, never harsh
+     white. Ink is warm espresso rather than cool graphite so the whole system
+     reads warm. */
+  --paper: 232 220 201; /* #e8dcc9 — milky-coffee tan (page background) */
+  --surface: 247 240 228; /* #f7f0e4 — raised cards (warm cream, like foam) */
+  --surface-2: 224 211 190; /* #e0d3be — inputs, recessed wells */
+  --line: 208 193 170; /* #d0c1aa — hairline borders / rules (warm taupe) */
+  --ink: 44 35 24; /* #2c2318 — primary text (warm espresso, ~12:1) */
+  --ink-soft: 87 73 58; /* #57493a — secondary body text (~6.4:1) */
+  --muted: 101 88 67; /* #655843 — tertiary text / labels (~5:1) */
+  --cherry: 180 58 47; /* #b43a2f — primary accent (fruit / brand) */
+  --cherry-deep: 157 42 31; /* #9d2a1f — accent text / hover (~6.5:1) */
+  --survey: 60 98 112; /* #3c6270 — cartographic ink (place / altitude) */
+  --brass: 161 122 58; /* #a17a3a — sweetness / extraction data accent */
+
+  /* Easing — natural deceleration, never bounce/elastic. */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
-  @apply bg-canvas font-sans text-cream antialiased;
-  /* Atmosphere: two faint accent glows over the dark roast, fixed so the
-     page reads as a lit cupping table rather than a flat fill. */
+  @apply bg-paper font-sans text-ink antialiased;
+  /* Atmosphere: two faint warm washes in opposite corners, fixed, so the paper
+     reads as a lit café table rather than a flat fill — a soft caramel glow
+     up top, a whisper of cherry below. */
   background-image:
     radial-gradient(
-      60rem 40rem at 78% -10%,
-      rgb(var(--jade) / 0.1),
+      56rem 44rem at 100% -12%,
+      rgb(var(--brass) / 0.09),
       transparent 60%
     ),
     radial-gradient(
-      50rem 40rem at 0% 8%,
-      rgb(var(--amber) / 0.07),
-      transparent 55%
+      46rem 40rem at -8% 112%,
+      rgb(var(--cherry) / 0.05),
+      transparent 58%
     );
   background-attachment: fixed;
   background-repeat: no-repeat;
 }
 
 @layer base {
-  /* Headings carry the display face; data/labels use mono — set per element. */
+  body {
+    /* Comfortable reading defaults: slightly larger base, relaxed leading,
+       and legibility features on the serif/mono. */
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+
+  /* Headings carry the serif display face; data/labels use mono per element. */
   h1,
   h2,
   h3 {
-    @apply font-display tracking-tight;
+    @apply font-display font-semibold tracking-tight;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }
 
@@ -65,12 +89,104 @@ body {
     animation: reveal 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
 
-  /* Faint hand-ruled hairline grid, like a cupping form. */
-  .ruled {
-    background-image:
-      linear-gradient(rgb(var(--line) / 0.5) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(var(--line) / 0.5) 1px, transparent 1px);
-    background-size: 2.5rem 2.5rem;
+  /* Topographic contour motif — faint concentric survey rings, for placing
+     behind hero / specimen elements. Decorative; pair with aria-hidden. */
+  .topo {
+    background-image: repeating-radial-gradient(
+      circle at var(--topo-x, 50%) var(--topo-y, 45%),
+      transparent 0,
+      transparent 21px,
+      rgb(var(--survey) / 0.07) 21px,
+      rgb(var(--survey) / 0.07) 22px
+    );
+  }
+
+  /* Ruled archive paper — faint horizontal catalogue hairlines. */
+  .ledger-rule {
+    background-image: repeating-linear-gradient(
+      rgb(var(--line) / 0.7) 0,
+      rgb(var(--line) / 0.7) 1px,
+      transparent 1px,
+      transparent 2.25rem
+    );
+  }
+
+  /* Contour rings breathe slowly, like a living survey map. */
+  .animate-drift {
+    animation: drift 26s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+
+  /* Draw a stroked SVG path on: set --draw-len to the path length. */
+  .animate-draw {
+    stroke-dasharray: var(--draw-len, 400);
+    animation: draw-in 1.2s var(--ease-out-expo) 0.35s both;
+  }
+
+  /* A brew drip falling from the dripper into the carafe (loops). */
+  .animate-drip {
+    animation: drip-fall 1.9s var(--ease-out-quart) infinite;
+  }
+
+  /* Liquid level gently rising and settling in the carafe (loops). */
+  .animate-brew {
+    animation: brew-rise 3.6s ease-in-out infinite alternate;
+  }
+
+  /* A continuous liquid stream (espresso) — a flowing dashed stroke. */
+  .animate-stream {
+    stroke-dasharray: 3 4;
+    animation: stream 0.55s linear infinite;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    transform: rotate(7deg) scale(1.05);
+  }
+}
+
+@keyframes draw-in {
+  from {
+    stroke-dashoffset: var(--draw-len, 400);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drip-fall {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--drip-dist, 40px));
+    opacity: 0;
+  }
+}
+
+@keyframes brew-rise {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(var(--brew-rise, -14px));
+  }
+}
+
+@keyframes stream {
+  to {
+    stroke-dashoffset: -14;
   }
 }
 
@@ -92,10 +208,22 @@ body {
   *::after {
     animation-duration: 0.001ms !important;
     animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
   .reveal {
     opacity: 1 !important;
     transform: none !important;
+  }
+  /* Looping motifs settle to a sensible static frame. */
+  .animate-drift,
+  .animate-drip,
+  .animate-brew,
+  .animate-stream {
+    animation: none !important;
+    transform: none !important;
+  }
+  .animate-drip {
+    opacity: 1 !important;
   }
 }

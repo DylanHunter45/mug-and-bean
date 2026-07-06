@@ -16,11 +16,11 @@ export default async function AppHomePage() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-4">
-      <h1 className="text-2xl font-bold text-cream">Your cellar</h1>
-      <p className="text-muted-bright">
+      <h1 className="text-3xl font-semibold text-ink">Your cellar</h1>
+      <p className="text-ink-soft">
         You&apos;re signed in as{" "}
-        <span className="font-medium text-cream">{user?.email}</span>. This is
-        the protected area — the future home of &ldquo;My Coffees&rdquo;.
+        <span className="font-medium text-ink">{user?.email}</span>. This is the
+        protected area — the future home of &ldquo;My Coffees&rdquo;.
       </p>
     </div>
   );

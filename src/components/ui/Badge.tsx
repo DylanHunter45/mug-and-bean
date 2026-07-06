@@ -1,15 +1,17 @@
 /**
- * Badge — a mono "spec label" pill, like a field on a cupping card.
- * Set in monospace to tie into the data voice of the design system.
+ * Badge — a mono "spec label" pill, like a field on a catalogue card. Set in
+ * monospace to tie into the data voice; tones map to flavour families
+ * (cherry = fruit, survey = place/earthy, brass = sweet).
  */
 import { cn } from "@/lib/utils";
 
-export type BadgeTone = "neutral" | "jade" | "amber";
+export type BadgeTone = "neutral" | "cherry" | "survey" | "brass";
 
 const toneClasses: Record<BadgeTone, string> = {
-  neutral: "border-line bg-surface text-muted-bright",
-  jade: "border-jade/30 bg-jade/10 text-jade",
-  amber: "border-amber/30 bg-amber/10 text-amber",
+  neutral: "border-line bg-surface-2 text-ink-soft",
+  cherry: "border-cherry/25 bg-cherry/[0.07] text-cherry-deep",
+  survey: "border-survey/25 bg-survey/[0.07] text-survey",
+  brass: "border-brass/30 bg-brass/[0.08] text-brass",
 };
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {

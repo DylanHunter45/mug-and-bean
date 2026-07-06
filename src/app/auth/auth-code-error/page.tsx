@@ -12,7 +12,7 @@ import { buttonClasses } from "@/components/ui";
 export default function AuthCodeErrorPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-4 px-6 text-center">
-      <h1 className="text-2xl font-semibold text-cream">
+      <h1 className="text-2xl font-semibold text-ink">
         Sign-in link didn&apos;t work
       </h1>
       <p className="text-sm text-muted">
