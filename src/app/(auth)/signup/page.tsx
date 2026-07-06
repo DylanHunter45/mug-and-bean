@@ -24,9 +24,7 @@ export default function SignUpPage({
   return (
     <div className="flex flex-col gap-6 rounded-card border border-line bg-surface p-6 shadow-card">
       <div className="flex flex-col gap-1">
-        <h2 className="text-xl font-semibold text-cream">
-          Create your account
-        </h2>
+        <h2 className="text-xl font-semibold text-ink">Create your account</h2>
         <p className="text-sm text-muted">
           Start logging the coffees you brew.
         </p>
@@ -36,11 +34,11 @@ export default function SignUpPage({
 
       <form action={signUp} className="flex flex-col gap-4">
         <input type="hidden" name="redirect" value={redirect} />
-        <label className="flex flex-col gap-1 text-sm font-medium text-cream">
+        <label className="flex flex-col gap-1 text-sm font-medium text-ink">
           Email
           <Input type="email" name="email" autoComplete="email" required />
         </label>
-        <label className="flex flex-col gap-1 text-sm font-medium text-cream">
+        <label className="flex flex-col gap-1 text-sm font-medium text-ink">
           Password
           <Input
             type="password"
@@ -71,7 +69,7 @@ export default function SignUpPage({
               ? "/login"
               : `/login?redirect=${encodeURIComponent(redirect)}`
           }
-          className="font-medium text-jade hover:underline"
+          className="font-medium text-cherry-deep hover:underline"
         >
           Sign in
         </Link>

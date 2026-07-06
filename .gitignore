@@ -45,8 +45,15 @@ Thumbs.db
 .claude/settings.local.json
 # Local runtime flag used by /closeapp + the dev-server auto-start hook
 .claude/.devserver-paused
+# Per-developer design tooling (the impeccable skill) — kept on disk locally,
+# not vendored into the repo. It also self-installs a copy under .github/.
+.claude/skills/
+/.github/skills/
+/.github/hooks/
 
 # Internal planning / strategy docs and the agent working guide — kept on disk
 # locally but not published to the public repo.
 /docs/
 /CLAUDE.md
+/PRODUCT.md
+/DESIGN.md

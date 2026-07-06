@@ -25,7 +25,7 @@ function OAuthForm({
       <input type="hidden" name="redirect" value={redirect} />
       <button
         type="submit"
-        className="w-full rounded-full border border-line bg-surface-2 px-4 py-2.5 text-sm font-medium text-cream transition-colors hover:border-jade/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jade focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+        className="w-full rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-cherry/50 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cherry focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
       >
         {label}
       </button>
