@@ -138,6 +138,40 @@ body {
     stroke-dasharray: 3 4;
     animation: stream 0.55s linear infinite;
   }
+
+  /* Slow press → hold → release cycle (AeroPress / French press plungers).
+     Set --press-dist (positive = pressing down; negative on a liquid level
+     rising in sympathy) and --press-dur per element. */
+  .animate-press {
+    animation: press-cycle var(--press-dur, 9s) ease-in-out infinite;
+  }
+
+  /* An intermittent pour — the stream draws in, holds, then trails off from
+     the top, like lifting the kettle. Set --pour-len to the path length. */
+  .animate-pour {
+    stroke-dasharray: var(--pour-len, 90);
+    animation: pour-cycle 4.6s ease-in-out infinite;
+  }
+
+  /* A steam wisp rising and dissolving (loops; stagger via delay). */
+  .animate-steam {
+    animation: steam-rise 3.4s ease-in-out infinite;
+  }
+
+  /* Gas-flame flicker (moka stovetop). Pivot set inline per flame. */
+  .animate-flame {
+    animation: flame-flicker 1.3s ease-in-out infinite;
+  }
+
+  /* Live gauge-needle wobble (espresso, 9 bar). Pivot set inline. */
+  .animate-needle {
+    animation: needle-sway 1.7s ease-in-out infinite alternate;
+  }
+
+  /* Crossfade when the brew showcase swaps methods. */
+  .animate-fade-in {
+    animation: fade-in 0.5s var(--ease-out-quart) both;
+  }
 }
 
 @keyframes drift {
@@ -190,6 +224,94 @@ body {
   }
 }
 
+@keyframes press-cycle {
+  0%,
+  8% {
+    transform: translateY(0);
+  }
+  55%,
+  70% {
+    transform: translateY(var(--press-dist, 12px));
+  }
+  92%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pour-cycle {
+  0% {
+    stroke-dashoffset: var(--pour-len, 90);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  32%,
+  58% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  88% {
+    stroke-dashoffset: calc(-1 * var(--pour-len, 90));
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: calc(-1 * var(--pour-len, 90));
+    opacity: 0;
+  }
+}
+
+@keyframes steam-rise {
+  0% {
+    transform: translateY(5px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-13px);
+    opacity: 0;
+  }
+}
+
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: scale(1, 1);
+    opacity: 0.9;
+  }
+  38% {
+    transform: scale(0.94, 1.12);
+    opacity: 1;
+  }
+  72% {
+    transform: scale(1.05, 0.9);
+    opacity: 0.75;
+  }
+}
+
+@keyframes needle-sway {
+  from {
+    transform: rotate(-7deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes reveal {
   from {
     opacity: 0;
@@ -219,11 +341,24 @@ body {
   .animate-drift,
   .animate-drip,
   .animate-brew,
-  .animate-stream {
+  .animate-stream,
+  .animate-press,
+  .animate-pour,
+  .animate-steam,
+  .animate-flame,
+  .animate-needle {
     animation: none !important;
     transform: none !important;
   }
   .animate-drip {
     opacity: 1 !important;
+  }
+  /* Pour shows as a full, still stream; steam wisps simply disappear. */
+  .animate-pour {
+    stroke-dasharray: 0 !important;
+    opacity: 1 !important;
+  }
+  .animate-steam {
+    opacity: 0 !important;
   }
 }
