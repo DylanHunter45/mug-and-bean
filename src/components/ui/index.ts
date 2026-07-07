@@ -4,9 +4,9 @@
  */
 export { Button, buttonClasses } from "./Button";
 export type { ButtonProps, ButtonVariant, ButtonSize } from "./Button";
-export { Input } from "./Input";
+export { Input, inputClasses } from "./Input";
 export type { InputProps } from "./Input";
-export { Badge } from "./Badge";
+export { Badge, badgeClasses } from "./Badge";
 export type { BadgeProps, BadgeTone } from "./Badge";
 export { Container } from "./Container";
 export type { ContainerProps } from "./Container";

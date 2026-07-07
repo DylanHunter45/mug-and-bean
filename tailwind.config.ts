@@ -38,6 +38,7 @@ const config: Config = {
         "cherry-deep": withAlpha("--cherry-deep"),
         survey: withAlpha("--survey"),
         brass: withAlpha("--brass"),
+        "brass-deep": withAlpha("--brass-deep"),
       },
       fontFamily: {
         // Body / UI — a clean humanist grotesque (not Inter).

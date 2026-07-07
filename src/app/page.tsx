@@ -82,15 +82,15 @@ export default function Home() {
     <main>
       <header className="sticky top-0 z-40 border-b border-line/70 bg-paper/80 backdrop-blur">
         <Container className="flex items-center justify-between py-4">
-          <Wordmark className="font-display text-xl font-semibold tracking-tight text-ink" />
+          <Wordmark className="font-display text-2xl font-semibold tracking-tight text-ink" />
           <nav className="flex items-center gap-2">
             <Link
               href="/login"
-              className={buttonClasses({ variant: "ghost", size: "sm" })}
+              className={buttonClasses({ variant: "ghost", size: "md" })}
             >
               Sign in
             </Link>
-            <Link href="/signup" className={buttonClasses({ size: "sm" })}>
+            <Link href="/signup" className={buttonClasses({ size: "md" })}>
               Join the waitlist
             </Link>
           </nav>
@@ -209,9 +209,9 @@ export default function Home() {
           </div>
 
           <div className="overflow-hidden rounded-card border border-line bg-surface shadow-card">
-            <div className="ledger-rule">
+            <div>
               {/* Header row */}
-              <div className="grid grid-cols-[3rem_1fr_auto] items-center gap-4 border-b border-line px-5 py-3 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted sm:grid-cols-[3.5rem_1.4fr_1fr_5rem_4rem] sm:px-7">
+              <div className="grid grid-cols-[3rem_1fr_auto] items-center gap-4 border-b border-line bg-surface-2/50 px-5 py-3.5 font-mono text-[0.72rem] uppercase tracking-[0.16em] text-muted sm:grid-cols-[3.5rem_1.4fr_1fr_5rem_4rem] sm:px-7">
                 <span>Nº</span>
                 <span>Coffee</span>
                 <span className="hidden sm:block">Origin</span>
@@ -230,7 +230,7 @@ export default function Home() {
                     <span className="font-display text-lg font-semibold leading-tight text-ink transition-transform duration-200 ease-out group-hover:translate-x-1">
                       {coffee}
                     </span>
-                    <span className="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-survey">
+                    <span className="font-mono text-[0.72rem] uppercase tracking-[0.12em] text-survey">
                       {roaster}
                     </span>
                   </span>
@@ -245,6 +245,30 @@ export default function Home() {
                   </span>
                 </div>
               ))}
+              {/* The next line in the ledger is the visitor's. */}
+              <Link
+                href="/signup"
+                className="group grid grid-cols-[3rem_1fr_auto] items-center gap-4 px-5 py-4 transition-colors hover:bg-surface-2 sm:grid-cols-[3.5rem_1.4fr_1fr_5rem_4rem] sm:px-7"
+              >
+                <span className="font-mono text-sm text-muted transition-colors group-hover:text-cherry-deep">
+                  015
+                </span>
+                <span className="flex flex-col">
+                  <span className="font-display text-lg font-semibold italic leading-tight text-muted transition-transform duration-200 ease-out group-hover:translate-x-1">
+                    Your first entry
+                  </span>
+                  <span className="font-mono text-[0.72rem] uppercase tracking-[0.12em] text-cherry-deep">
+                    join the waitlist →
+                  </span>
+                </span>
+                <span className="hidden text-sm text-muted sm:block">—</span>
+                <span className="hidden text-right font-mono text-sm text-muted sm:block">
+                  —
+                </span>
+                <span className="text-right font-mono text-base text-muted">
+                  ·
+                </span>
+              </Link>
             </div>
           </div>
         </Container>
