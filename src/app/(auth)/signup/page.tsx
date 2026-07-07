@@ -2,9 +2,9 @@
  * Sign-up page (/signup).
  *
  * Server Component mirroring /login. Registers via the `signUp` action, which
- * either signs the user in immediately (email confirmation off — local default)
+ * either signs the user in immediately (email confirmation off - local default)
  * or sends them back to /login with a "check your email" notice (confirmation
- * on — hosted).
+ * on - hosted).
  */
 import Link from "next/link";
 

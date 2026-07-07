@@ -3,7 +3,7 @@
  *
  * Email/password sign-in & sign-up, OAuth kickoff (Google / Apple), and
  * sign-out. These run on the server, so the Supabase client here is the
- * cookie-bound server client — calling its auth methods writes the session
+ * cookie-bound server client - calling its auth methods writes the session
  * cookies that the middleware then keeps refreshed.
  *
  * Error handling convention: on failure we redirect back to the form with a
@@ -71,7 +71,7 @@ export async function signUp(formData: FormData): Promise<void> {
 
   // With email confirmation OFF (local default), signUp returns a live session
   // and the user is signed in immediately. With it ON (hosted), there is no
-  // session yet — send them to log in with a "check your email" notice.
+  // session yet - send them to log in with a "check your email" notice.
   if (data.session) {
     redirect(next);
   }

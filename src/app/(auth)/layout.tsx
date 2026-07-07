@@ -1,7 +1,7 @@
 /**
  * Layout for the (auth) route group (login / signup).
  *
- * `(auth)` is a route group — it shares this centered card layout without
+ * `(auth)` is a route group - it shares this centered card layout without
  * adding a `/auth` segment to the URLs (pages stay at `/login`, `/signup`).
  */
 export default function AuthLayout({

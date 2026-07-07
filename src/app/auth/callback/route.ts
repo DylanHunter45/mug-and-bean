@@ -4,7 +4,7 @@
  * Providers redirect back here with a `?code=` after the user consents.
  * `exchangeCodeForSession` swaps that code for a session and writes the auth
  * cookies (via the server client's cookie adapter), then we forward the user to
- * their intended destination (`?next=`, validated) — or to an error page if the
+ * their intended destination (`?next=`, validated) - or to an error page if the
  * exchange fails.
  */
 import { NextResponse } from "next/server";

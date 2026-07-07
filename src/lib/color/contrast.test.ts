@@ -24,7 +24,7 @@ function loadTokens(): Record<string, RGB> {
   );
   const css = readFileSync(cssPath, "utf8");
   const tokens: Record<string, RGB> = {};
-  // Matches lines like:  --cherry: 180 58 47; /* … */
+  // Matches lines like:  --cherry: 180 58 47; /* ... */
   const re = /--([a-z0-9-]+):\s*(\d{1,3})\s+(\d{1,3})\s+(\d{1,3})\s*;/g;
   for (const [, name, r, g, b] of css.matchAll(re)) {
     tokens[name] = [Number(r), Number(g), Number(b)];
@@ -110,7 +110,7 @@ describe("accent text meets WCAG AA (normal text, 4.5:1)", () => {
   }
 
   // The Badge `brass` tone draws brass-deep text over an 8% brass tint on the
-  // page ground — assert against that composited background, the true worst
+  // page ground - assert against that composited background, the true worst
   // case. (Plain `brass` is reserved for fills/decoration, not text.)
   it("brass-deep on the brass-tinted badge fill", () => {
     const badgeBg = compositeOver(t.brass, 0.08, t.paper);

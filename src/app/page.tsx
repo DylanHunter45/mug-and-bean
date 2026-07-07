@@ -4,10 +4,11 @@ import Link from "next/link";
 
 import { BrewShowcase } from "@/components/landing/BrewDiagram";
 import { CuppingGauge } from "@/components/landing/CuppingGauge";
+import { WaitlistForm } from "@/components/landing/WaitlistForm";
 import { Badge, Container, Section, buttonClasses } from "@/components/ui";
 import type { BadgeTone } from "@/components/ui";
 
-/* The core loop — a real ordered sequence, drawn as waypoints on a route. */
+/* The core loop - a real ordered sequence, drawn as waypoints on a route. */
 const ROUTE = [
   {
     mark: "S",
@@ -26,7 +27,7 @@ const ROUTE = [
   },
 ];
 
-/* Sample specimen powering the hero — exactly what the app captures per bag. */
+/* Sample specimen powering the hero - exactly what the app captures per bag. */
 const SPECS = [
   ["Process", "Washed"],
   ["Varietal", "Red Bourbon"],
@@ -34,14 +35,14 @@ const SPECS = [
   ["Harvest", "2025"],
 ];
 
-/* Flavour notes on the specimen card — tones map to flavour families. */
+/* Flavour notes on the specimen card - tones map to flavour families. */
 const FLAVOURS: { tone: BadgeTone; label: string }[] = [
   { tone: "cherry", label: "Blackcurrant" },
   { tone: "brass", label: "Brown sugar" },
   { tone: "survey", label: "Jasmine" },
 ];
 
-/* A few catalogue rows — the payoff, shown as a ruled archive ledger. */
+/* A few catalogue rows - the payoff, shown as a ruled archive ledger. */
 const CATALOGUE = [
   {
     no: "014",
@@ -90,14 +91,18 @@ export default function Home() {
             >
               Sign in
             </Link>
-            <Link href="/signup" className={buttonClasses({ size: "md" })}>
+            <Link
+              href="#waitlist"
+              data-cta="nav"
+              className={buttonClasses({ size: "md" })}
+            >
               Join the waitlist
             </Link>
           </nav>
         </Container>
       </header>
 
-      {/* Hero — sized to fit the first screen; a live specimen card over faint
+      {/* Hero - sized to fit the first screen; a live specimen card over faint
           contours. min-h fills the viewport (minus header) and centers. */}
       <section className="relative flex flex-col overflow-hidden pb-12 pt-8 sm:pb-14 lg:min-h-[calc(100svh-3.75rem)] lg:justify-center lg:py-8">
         <Container className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
@@ -121,8 +126,8 @@ export default function Home() {
               style={{ animationDelay: "160ms" }}
             >
               Scan the bag, log the brew, score the cup. Mug &amp; Bean keeps a
-              proper archive of the specialty coffee you drink — origin,
-              altitude, process, and how the cup actually scored — and learns
+              proper archive of the specialty coffee you drink - origin,
+              altitude, process, and how the cup actually scored - and learns
               your palate as the entries pile up.
             </p>
 
@@ -130,7 +135,11 @@ export default function Home() {
               className="reveal flex flex-wrap items-center gap-3"
               style={{ animationDelay: "240ms" }}
             >
-              <Link href="/signup" className={buttonClasses({ size: "lg" })}>
+              <Link
+                href="#waitlist"
+                data-cta="hero"
+                className={buttonClasses({ size: "lg" })}
+              >
                 Join the waitlist
               </Link>
               <Link
@@ -151,7 +160,7 @@ export default function Home() {
           </div>
 
           <div className="relative">
-            {/* Contour rings — topographic elevation motif behind the card. */}
+            {/* Contour rings - topographic elevation motif behind the card. */}
             <div
               aria-hidden
               className="topo animate-drift pointer-events-none absolute -right-20 -top-24 hidden h-[30rem] w-[30rem] opacity-70 [--topo-x:62%] [--topo-y:38%] [mask-image:radial-gradient(circle_at_62%_38%,black,transparent_68%)] sm:block"
@@ -195,7 +204,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* The catalogue — payoff shown as a ruled archive ledger. */}
+      {/* The catalogue - payoff shown as a ruled archive ledger. */}
       <Section className="border-t border-line/70">
         <Container className="flex flex-col gap-8">
           <div className="flex flex-col gap-3">
@@ -204,7 +213,7 @@ export default function Home() {
             </h2>
             <p className="max-w-xl text-ink-soft">
               Bags get finished and forgotten. Here, every one stays on the
-              record — sortable by roaster, origin, altitude, or score.
+              record - sortable by roaster, origin, altitude, or score.
             </p>
           </div>
 
@@ -247,7 +256,8 @@ export default function Home() {
               ))}
               {/* The next line in the ledger is the visitor's. */}
               <Link
-                href="/signup"
+                href="#waitlist"
+                data-cta="catalogue"
                 className="group grid grid-cols-[3rem_1fr_auto] items-center gap-4 px-5 py-4 transition-colors hover:bg-surface-2 sm:grid-cols-[3.5rem_1.4fr_1fr_5rem_4rem] sm:px-7"
               >
                 <span className="font-mono text-sm text-muted transition-colors group-hover:text-cherry-deep">
@@ -261,9 +271,9 @@ export default function Home() {
                     join the waitlist →
                   </span>
                 </span>
-                <span className="hidden text-sm text-muted sm:block">—</span>
+                <span className="hidden text-sm text-muted sm:block">-</span>
                 <span className="hidden text-right font-mono text-sm text-muted sm:block">
-                  —
+                  -
                 </span>
                 <span className="text-right font-mono text-base text-muted">
                   ·
@@ -274,8 +284,9 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* Closing CTA. */}
-      <Section className="border-t border-line/70">
+      {/* Closing CTA - the email capture the Hero CTAs scroll to. scroll-mt
+          clears the sticky header when jumped to via #waitlist. */}
+      <Section id="waitlist" className="scroll-mt-24 border-t border-line/70">
         <Container>
           <div className="relative overflow-hidden rounded-card border border-line bg-surface px-6 py-14 text-center shadow-card">
             <div
@@ -283,6 +294,9 @@ export default function Home() {
               className="topo animate-drift pointer-events-none absolute inset-0 opacity-50 [--topo-x:50%] [--topo-y:120%] [mask-image:radial-gradient(circle_at_50%_120%,black,transparent_70%)]"
             />
             <div className="relative flex flex-col items-center gap-6">
+              <span className="font-mono text-xs uppercase tracking-[0.16em] text-cherry-deep">
+                Early access · 500 founding spots
+              </span>
               <h2 className="max-w-xl text-display-sm font-semibold text-ink">
                 Be among the first to shelve a coffee.
               </h2>
@@ -290,9 +304,9 @@ export default function Home() {
                 Early tasters get first access when Mug &amp; Bean opens, plus a
                 founding spot in the cellar. Free to keep.
               </p>
-              <Link href="/signup" className={buttonClasses({ size: "lg" })}>
-                Join the waitlist
-              </Link>
+              <div className="flex w-full justify-center pt-1">
+                <WaitlistForm />
+              </div>
             </div>
           </div>
         </Container>
@@ -308,7 +322,7 @@ export default function Home() {
   );
 }
 
-/* An altitude cross-section — turns a spec into a place. Decorative. */
+/* An altitude cross-section - turns a spec into a place. Decorative. */
 function ElevationProfile() {
   const ridge =
     "M0,40 L30,32 L62,36 L96,21 L128,27 L155,9 L188,23 L222,16 L258,28 L300,23";
@@ -361,7 +375,7 @@ function SpecimenCard() {
         <span className="text-ink-soft">Rwanda · Nyamasheke</span>
       </div>
 
-      {/* Elevation band — the cartographic signature. */}
+      {/* Elevation band - the cartographic signature. */}
       <div className="mt-4 rounded-xl border border-line bg-surface-2/60 px-4 pb-2 pt-3">
         <div className="flex items-center justify-between font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted">
           <span>Elevation</span>

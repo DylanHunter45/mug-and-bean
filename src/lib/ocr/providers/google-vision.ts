@@ -1,10 +1,10 @@
 /**
- * Google Cloud Vision adapter — DOCUMENT_TEXT_DETECTION via the REST API.
+ * Google Cloud Vision adapter - DOCUMENT_TEXT_DETECTION via the REST API.
  *
  * Uses the plain REST `images:annotate` endpoint with an API key, which keeps
  * the benchmark dependency-free (just `fetch`) and matches the credential the
  * .env.example documents first (GOOGLE_CLOUD_VISION_API_KEY). For a future
- * service-account / ADC flow, swap in the `@google-cloud/vision` client here —
+ * service-account / ADC flow, swap in the `@google-cloud/vision` client here -
  * the {@link OcrProvider} contract stays the same.
  *
  * Docs: https://cloud.google.com/vision/docs/fulltext-annotations
@@ -50,7 +50,7 @@ export const googleVisionProvider: OcrProvider = {
     const apiKey = process.env.GOOGLE_CLOUD_VISION_API_KEY;
     if (!apiKey) {
       throw new Error(
-        "GOOGLE_CLOUD_VISION_API_KEY is not set — cannot call Google Cloud Vision.",
+        "GOOGLE_CLOUD_VISION_API_KEY is not set - cannot call Google Cloud Vision.",
       );
     }
 

@@ -3,8 +3,8 @@
  *
  * Framework-agnostic (no Next.js imports) so it can be unit-tested in isolation
  * and reused by both the middleware and the auth pages. Keeping the
- * "which paths are protected" and "is this redirect safe" decisions here — as
- * plain functions — means they have a single source of truth and explicit tests
+ * "which paths are protected" and "is this redirect safe" decisions here - as
+ * plain functions - means they have a single source of truth and explicit tests
  * (see routes.test.ts).
  */
 
@@ -29,7 +29,7 @@ export function isProtectedPath(pathname: string): boolean {
 
 /**
  * Validate a post-login redirect target before we trust it. Only same-origin
- * absolute paths are allowed — anything else (external URLs, protocol-relative
+ * absolute paths are allowed - anything else (external URLs, protocol-relative
  * `//evil.com`, backslash tricks, non-paths) falls back to a safe default.
  * This blocks open-redirect abuse of the `?redirect=` query param.
  */

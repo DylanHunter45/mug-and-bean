@@ -1,5 +1,5 @@
 /**
- * Container — centres content and caps line length with consistent
+ * Container - centres content and caps line length with consistent
  * horizontal gutters. Use it inside a `<Section>` to lay out page content.
  */
 import { cn } from "@/lib/utils";

@@ -20,7 +20,7 @@ export default async function AppHomePage() {
       <p className="text-ink-soft">
         You&apos;re signed in as{" "}
         <span className="font-medium text-ink">{user?.email}</span>. This is the
-        protected area — the future home of &ldquo;My Coffees&rdquo;.
+        protected area - the future home of &ldquo;My Coffees&rdquo;.
       </p>
     </div>
   );

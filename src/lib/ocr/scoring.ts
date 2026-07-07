@@ -8,7 +8,7 @@
  * Matching is deliberately forgiving but not sloppy: values are normalised
  * (lower-cased, de-accented, punctuation-stripped) before comparison, scalar
  * fields match on equality OR containment (so "Ethiopia" scores against
- * "Ethiopia, Yirgacheffe"), and tasting notes — a multi-value field — match
+ * "Ethiopia, Yirgacheffe"), and tasting notes - a multi-value field - match
  * when at least half the expected notes are present.
  */
 import type { ParsedLabel } from "./parse";
@@ -18,12 +18,12 @@ import { LABEL_FIELDS, type LabelField } from "./types";
  * One row of the known-answer dataset (see benchmark/ocr/ground-truth.json).
  *
  * Values are recorded in the LABEL'S language (the sample dataset is French) so
- * the benchmark measures OCR + parse quality, not translation — `process` is
+ * the benchmark measures OCR + parse quality, not translation - `process` is
  * "Lavé", not "Washed". Translation to canonical English is a separate
  * downstream step.
  *
  * Only the four scored fields below are compared. The remaining fields are
- * RECORDED but ignored by the scorer — they capture the richer data real labels
+ * RECORDED but ignored by the scorer - they capture the richer data real labels
  * carry, for later reuse. The schema gaps they expose (altitude as a range,
  * roast date) are a deferred follow-up migration.
  */
@@ -34,7 +34,7 @@ export interface GroundTruthLabel {
   // --- Scored fields (in the label's language) ---
   /** Roaster name, e.g. "Kohi". */
   roaster: string;
-  /** Origin — country (region may be appended), e.g. "Colombie". */
+  /** Origin - country (region may be appended), e.g. "Colombie". */
   origin: string;
   /** Processing method as printed, e.g. "Lavé". */
   process: string;
@@ -48,7 +48,7 @@ export interface GroundTruthLabel {
   region?: string;
   /** Varietal(s), e.g. "Caturra, Tabi". */
   variety?: string;
-  /** Altitude as printed — often a range, e.g. "1200M - 2000M". */
+  /** Altitude as printed - often a range, e.g. "1200M - 2000M". */
   altitude?: string;
   /** Recommended brew methods, if printed. */
   brewMethods?: string[];

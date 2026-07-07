@@ -1,9 +1,9 @@
 /**
- * Input — single-line text field.
+ * Input - single-line text field.
  *
  * Forwards a ref so it works inside client-side controlled forms. Pass
  * `invalid` to render the error state (also sets `aria-invalid` for AT). Always
- * pair with a `<label>` (see src/components/README.md) — the component is
+ * pair with a `<label>` (see src/components/README.md) - the component is
  * intentionally label-agnostic so callers control association.
  *
  * `inputClasses()` is exported separately (mirroring `buttonClasses`) so the

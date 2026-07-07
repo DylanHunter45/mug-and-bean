@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /*
- * Mug & Bean — "Origin Ledger" design system.
+ * Mug & Bean - "Origin Ledger" design system.
  *
  * Specialty coffee is defined by place and altitude, so the interface is a
  * cartographic archive: cool rag-paper ground, graphite survey ink, a single
@@ -16,31 +16,37 @@
 :root {
   color-scheme: light;
 
-  /* Warm "latte paper" ground — soft on the eyes, coffee-toned, never harsh
+  /* Warm "latte paper" ground - soft on the eyes, coffee-toned, never harsh
      white. Ink is warm espresso rather than cool graphite so the whole system
      reads warm. */
-  --paper: 232 220 201; /* #e8dcc9 — milky-coffee tan (page background) */
-  --surface: 247 240 228; /* #f7f0e4 — raised cards (warm cream, like foam) */
-  --surface-2: 224 211 190; /* #e0d3be — inputs, recessed wells */
-  --line: 208 193 170; /* #d0c1aa — hairline borders / rules (warm taupe) */
-  --ink: 44 35 24; /* #2c2318 — primary text (warm espresso, ~12:1) */
-  --ink-soft: 87 73 58; /* #57493a — secondary body text (~6.4:1) */
-  --muted: 101 88 67; /* #655843 — tertiary text / labels (~5:1) */
-  --cherry: 180 58 47; /* #b43a2f — primary accent (fruit / brand) */
-  --cherry-deep: 157 42 31; /* #9d2a1f — accent text / hover (~6.5:1) */
-  --survey: 60 98 112; /* #3c6270 — cartographic ink (place / altitude) */
-  --brass: 161 122 58; /* #a17a3a — sweetness accent for FILLS/decoration only */
-  --brass-deep: 114 83 30; /* #72531e — brass as TEXT (AA: ~5.2:1 on paper) */
+  --paper: 232 220 201; /* #e8dcc9 - milky-coffee tan (page background) */
+  --surface: 247 240 228; /* #f7f0e4 - raised cards (warm cream, like foam) */
+  --surface-2: 224 211 190; /* #e0d3be - inputs, recessed wells */
+  --line: 208 193 170; /* #d0c1aa - hairline borders / rules (warm taupe) */
+  --ink: 44 35 24; /* #2c2318 - primary text (warm espresso, ~12:1) */
+  --ink-soft: 87 73 58; /* #57493a - secondary body text (~6.4:1) */
+  --muted: 101 88 67; /* #655843 - tertiary text / labels (~5:1) */
+  --cherry: 180 58 47; /* #b43a2f - primary accent (fruit / brand) */
+  --cherry-deep: 157 42 31; /* #9d2a1f - accent text / hover (~6.5:1) */
+  --survey: 60 98 112; /* #3c6270 - cartographic ink (place / altitude) */
+  --brass: 161 122 58; /* #a17a3a - sweetness accent for FILLS/decoration only */
+  --brass-deep: 114 83 30; /* #72531e - brass as TEXT (AA: ~5.2:1 on paper) */
 
-  /* Easing — natural deceleration, never bounce/elastic. */
+  /* Easing - natural deceleration, never bounce/elastic. */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  /* In-page CTAs (Hero → #waitlist) glide instead of jumping. Disabled under
+     reduced-motion by the block below. */
+  scroll-behavior: smooth;
 }
 
 body {
   @apply bg-paper font-sans text-ink antialiased;
   /* Atmosphere: two faint warm washes in opposite corners, fixed, so the paper
-     reads as a lit café table rather than a flat fill — a soft caramel glow
+     reads as a lit café table rather than a flat fill - a soft caramel glow
      up top, a whisper of cherry below. */
   background-image:
     radial-gradient(
@@ -90,7 +96,7 @@ body {
     animation: reveal 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
 
-  /* Topographic contour motif — faint concentric survey rings, for placing
+  /* Topographic contour motif - faint concentric survey rings, for placing
      behind hero / specimen elements. Decorative; pair with aria-hidden. */
   .topo {
     background-image: repeating-radial-gradient(
@@ -102,7 +108,7 @@ body {
     );
   }
 
-  /* Ruled archive paper — faint horizontal catalogue hairlines. */
+  /* Ruled archive paper - faint horizontal catalogue hairlines. */
   .ledger-rule {
     background-image: repeating-linear-gradient(
       rgb(var(--line) / 0.7) 0,
@@ -134,7 +140,7 @@ body {
     animation: brew-rise 3.6s ease-in-out infinite alternate;
   }
 
-  /* A continuous liquid stream (espresso) — a flowing dashed stroke. */
+  /* A continuous liquid stream (espresso) - a flowing dashed stroke. */
   .animate-stream {
     stroke-dasharray: 3 4;
     animation: stream 0.55s linear infinite;
@@ -147,7 +153,7 @@ body {
     animation: press-cycle var(--press-dur, 9s) ease-in-out infinite;
   }
 
-  /* An intermittent pour — the stream draws in, holds, then trails off from
+  /* An intermittent pour - the stream draws in, holds, then trails off from
      the top, like lifting the kettle. Set --pour-len to the path length. */
   .animate-pour {
     stroke-dasharray: var(--pour-len, 90);
@@ -326,6 +332,9 @@ body {
 
 /* Respect reduced-motion: show everything, drop the movement. */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
