@@ -4,41 +4,48 @@
  * WaitlistForm — the landing page's frictionless email capture.
  *
  * Owns the visual form, client-side email validation, and the success/incentive
- * states; it's the scroll target the Hero CTAs jump to.
- *
- * Persistence is intentionally a seam: `submitEmail()` below is a placeholder
- * to be pointed at the backend (a server action / route handler that writes the
- * address, re-validates server-side, and treats duplicates as success). The
- * surrounding UI already models the success and error states.
+ * states; it's the scroll target the Hero CTAs jump to. On submit it posts to
+ * `POST /api/waitlist`, which persists the address, re-validates server-side,
+ * and reports whether this was a new sign-up or an already-subscribed address —
+ * both are treated as success (a duplicate is never shown as an error).
  */
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { buttonClasses, inputClasses } from "@/components/ui";
-
-// Same shape the server will validate against — keep the two in sync.
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { isValidEmail } from "@/lib/waitlist/validate";
 
 type Status = "idle" | "submitting" | "success" | "error";
+// Distinguishes the two success copies; mirrors the endpoint's response.
+type Outcome = "subscribed" | "already_subscribed";
 
-async function submitEmail(email: string): Promise<void> {
-  // Persistence seam: point `email` at the backend here (server action / route
-  // handler), returning success for both new and already-subscribed addresses.
-  // For now, simulate a fast round-trip so the success state is exercised.
-  await new Promise((resolve) => setTimeout(resolve, 400));
-  void email;
+interface WaitlistResponse {
+  status?: Outcome;
+}
+
+/** Read an optional `?ref=` attribution tag from the URL, if present. */
+function readReferralSource(): string | null {
+  if (typeof window === "undefined") return null;
+  return new URLSearchParams(window.location.search).get("ref");
 }
 
 export function WaitlistForm() {
   const [status, setStatus] = useState<Status>("idle");
+  const [outcome, setOutcome] = useState<Outcome>("subscribed");
   const [invalid, setInvalid] = useState(false);
+  const referralRef = useRef<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Capture attribution once on mount (window isn't available during SSR).
+  useEffect(() => {
+    referralRef.current = readReferralSource();
+  }, []);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const email = inputRef.current?.value.trim() ?? "";
 
-    // Client-side gate (the server re-validates on submit).
-    if (!EMAIL_RE.test(email)) {
+    // Client-side gate (the endpoint re-validates as the authoritative check).
+    if (!isValidEmail(email)) {
       setInvalid(true);
       inputRef.current?.focus();
       return;
@@ -47,7 +54,19 @@ export function WaitlistForm() {
     setInvalid(false);
     setStatus("submitting");
     try {
-      await submitEmail(email);
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          referralSource: referralRef.current,
+        }),
+      });
+      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+      const data = (await response.json()) as WaitlistResponse;
+      setOutcome(
+        data.status === "already_subscribed" ? data.status : "subscribed",
+      );
       setStatus("success");
     } catch {
       setStatus("error");
@@ -55,6 +74,7 @@ export function WaitlistForm() {
   }
 
   if (status === "success") {
+    const alreadyOnList = outcome === "already_subscribed";
     return (
       <div
         className="reveal flex flex-col items-center gap-3 text-center"
@@ -65,11 +85,14 @@ export function WaitlistForm() {
           ✓
         </span>
         <p className="font-display text-xl font-semibold text-ink">
-          You&apos;re on the list.
+          {alreadyOnList
+            ? "You're already on the list."
+            : "You're on the list."}
         </p>
         <p className="max-w-sm text-sm text-ink-soft">
-          We&apos;ll email you the moment Mug &amp; Bean opens — your founding
-          spot in the cellar is reserved.
+          {alreadyOnList
+            ? "Your founding spot in the cellar is still reserved — we'll email you the moment Mug & Bean opens."
+            : "We'll email you the moment Mug & Bean opens — your founding spot in the cellar is reserved."}
         </p>
       </div>
     );
