@@ -17,7 +17,7 @@ import { DEFAULT_AUTHED_PATH, safeRedirectPath } from "@/lib/auth/routes";
 export default function SignUpPage({
   searchParams,
 }: {
-  searchParams: { error?: string; redirect?: string };
+  searchParams: { error?: string; email?: string; redirect?: string };
 }) {
   const redirect = safeRedirectPath(searchParams.redirect);
 
@@ -36,7 +36,13 @@ export default function SignUpPage({
         <input type="hidden" name="redirect" value={redirect} />
         <label className="flex flex-col gap-1 text-sm font-medium text-ink">
           Email
-          <Input type="email" name="email" autoComplete="email" required />
+          <Input
+            type="email"
+            name="email"
+            autoComplete="email"
+            defaultValue={searchParams.email}
+            required
+          />
         </label>
         <label className="flex flex-col gap-1 text-sm font-medium text-ink">
           Password

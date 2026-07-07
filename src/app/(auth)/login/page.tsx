@@ -10,15 +10,22 @@ import Link from "next/link";
 import { signIn } from "@/app/(auth)/actions";
 import { AuthAlert } from "@/components/auth/AuthAlert";
 import { OAuthButtons } from "@/components/auth/OAuthButtons";
+import { ResendConfirmation } from "@/components/auth/ResendConfirmation";
 import { Button, Input } from "@/components/ui";
 import { DEFAULT_AUTHED_PATH, safeRedirectPath } from "@/lib/auth/routes";
 
 export default function LoginPage({
   searchParams,
 }: {
-  searchParams: { error?: string; message?: string; redirect?: string };
+  searchParams: {
+    error?: string;
+    message?: string;
+    email?: string;
+    redirect?: string;
+  };
 }) {
   const redirect = safeRedirectPath(searchParams.redirect);
+  const pendingEmail = searchParams.email;
 
   return (
     <div className="flex flex-col gap-6 rounded-card border border-line bg-surface p-6 shadow-card">
@@ -29,11 +36,21 @@ export default function LoginPage({
 
       <AuthAlert error={searchParams.error} message={searchParams.message} />
 
+      {pendingEmail ? (
+        <ResendConfirmation email={pendingEmail} redirect={redirect} />
+      ) : null}
+
       <form action={signIn} className="flex flex-col gap-4">
         <input type="hidden" name="redirect" value={redirect} />
         <label className="flex flex-col gap-1 text-sm font-medium text-ink">
           Email
-          <Input type="email" name="email" autoComplete="email" required />
+          <Input
+            type="email"
+            name="email"
+            autoComplete="email"
+            defaultValue={pendingEmail}
+            required
+          />
         </label>
         <label className="flex flex-col gap-1 text-sm font-medium text-ink">
           Password
