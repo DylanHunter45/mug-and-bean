@@ -7,11 +7,11 @@
  * tap hands a JPEG `File` to `onCapture` for downstream processing. Retake and
  * preview are the parent's job - this component only produces frames.
  *
- * Graceful degradation is first-class, not an afterthought: when `getUserMedia`
- * is missing, permission is denied, or the camera can't start, the file-upload
- * fallback (`capture="environment"` so mobile still opens the camera app) is
- * always present so the user is never dead-ended. All the non-React logic lives
- * in `@/lib/scan/camera` so a native shell can reuse it.
+ * Graceful degradation is first-class, not an afterthought: a file-upload
+ * fallback (a plain picker - pick an existing photo from the gallery/files) is
+ * always present, so a denied permission or an unsupported browser is never a
+ * dead end. All the non-React logic lives in `@/lib/scan/camera` so a native
+ * shell can reuse it.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -161,10 +161,13 @@ export function ScanCamera({ onCapture, className }: ScanCameraProps) {
           })}
         >
           {phase === "streaming" ? "Upload a photo instead" : "Upload a photo"}
+          {/* No `capture` attribute: the live viewfinder already handles "take a
+              photo now", so this is a true file picker - on mobile that lets the
+              user choose an existing photo from their gallery/files (with
+              `capture` set, mobile forces the camera and blocks the gallery). */}
           <input
             type="file"
             accept="image/*"
-            capture="environment"
             onChange={handleFile}
             className="sr-only"
           />
