@@ -5,7 +5,7 @@
  *
  *   1. Refresh the auth session. `supabase.auth.getUser()` revalidates the
  *      token with the Auth server and, when it has expired, the SSR client
- *      writes refreshed cookies onto the response — which is how sessions stay
+ *      writes refreshed cookies onto the response - which is how sessions stay
  *      alive without forcing a re-login.
  *   2. Gate protected routes. Unauthenticated requests to `/app/*` are
  *      redirected to `/login?redirect=<original path>`.
@@ -27,7 +27,7 @@ export async function updateSession(
 ): Promise<NextResponse> {
   let supabaseResponse = NextResponse.next({ request });
 
-  // Before Supabase is configured (no .env.local yet — it's a manual setup
+  // Before Supabase is configured (no .env.local yet - it's a manual setup
   // step), there is no session to refresh or gate. Pass requests through rather
   // than 500-ing every page. Auth operations themselves still fail loudly.
   const env = getOptionalSupabaseEnv();
@@ -53,7 +53,7 @@ export async function updateSession(
     },
   });
 
-  // Do not run code between the client creation and getUser() — it revalidates
+  // Do not run code between the client creation and getUser() - it revalidates
   // the token and refreshes cookies as a side effect.
   const {
     data: { user },
@@ -63,7 +63,7 @@ export async function updateSession(
     const redirectUrl = request.nextUrl.clone();
     const target = request.nextUrl.pathname + request.nextUrl.search;
     redirectUrl.pathname = LOGIN_PATH;
-    // Assign `.search` as a string directly — mutating NextURL.searchParams
+    // Assign `.search` as a string directly - mutating NextURL.searchParams
     // after the fact does not reliably serialize into NextResponse.redirect.
     redirectUrl.search = `?redirect=${encodeURIComponent(target)}`;
 

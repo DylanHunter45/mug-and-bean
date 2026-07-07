@@ -2,7 +2,7 @@
  * Supabase service-role (admin) client.
  *
  * SERVER-ONLY. This client authenticates with the service-role key, which
- * BYPASSES Row Level Security — it can read and write any row. Use it only in
+ * BYPASSES Row Level Security - it can read and write any row. Use it only in
  * Route Handlers / Server Actions for operations that are intentionally not
  * scoped to a signed-in user (e.g. writing a public waitlist sign-up to a
  * table that is otherwise locked away from the anon/authenticated roles).
@@ -16,7 +16,7 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 export function createAdminClient() {
   if (typeof window !== "undefined") {
     throw new Error(
-      "createAdminClient() must never run in the browser — it uses the " +
+      "createAdminClient() must never run in the browser - it uses the " +
         "service-role key, which bypasses Row Level Security.",
     );
   }

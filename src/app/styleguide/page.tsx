@@ -20,7 +20,7 @@ import {
  * Component gallery / living style guide for the "Origin Ledger" base library.
  * A kitchen-sink of every primitive in every variant so the
  * components can be eyeballed at the three target breakpoints (375 / 768 /
- * 1280px — just resize) and audited with axe / Lighthouse against a single
+ * 1280px - just resize) and audited with axe / Lighthouse against a single
  * page. Internal reference, kept out of search.
  */
 export const metadata: Metadata = {
@@ -147,7 +147,7 @@ export default function StyleguidePage() {
           </div>
 
           <h3 className="mb-3 mt-8 font-mono text-eyebrow uppercase text-muted">
-            Text on paper — live AA ratio
+            Text on paper - live AA ratio
           </h3>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {TEXT_ON_PAPER.map((name) => {

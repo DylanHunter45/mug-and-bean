@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Brew method diagrams — line-art field diagrams (survey ink on paper,
+ * Brew method diagrams - line-art field diagrams (survey ink on paper,
  * technical annotations), one per brew method, each with its own motion: a
  * pulsing kettle pour, a pressing plunger, a live pressure gauge over flowing
  * espresso streams, a flickering stove flame, a plunging French press, and a
@@ -9,7 +9,7 @@
  *
  * `BrewShowcase` cycles through them with a crossfade (paused on hover/focus,
  * stopped once the visitor picks a method, and never auto-run under
- * prefers-reduced-motion). Pure SVG + CSS keyframes (see globals.css) — the
+ * prefers-reduced-motion). Pure SVG + CSS keyframes (see globals.css) - the
  * only JS is the rotation.
  */
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
@@ -77,7 +77,7 @@ function V60() {
       <path d="M196 8 C168 2 146 8 137 24" opacity="0.9" />
       <path d="M196 17 C172 12 154 17 146 27" opacity="0.9" />
       <path d="M137 24 L146 27" opacity="0.9" />
-      {/* the pour — draws in, holds, trails off, like lifting the kettle */}
+      {/* the pour - draws in, holds, trails off, like lifting the kettle */}
       <path
         className="animate-pour"
         style={{ "--pour-len": "48" } as CSSProperties}
@@ -85,7 +85,7 @@ function V60() {
         stroke={BRASS}
         strokeWidth="1.8"
       />
-      {/* dripper — a true 60° cone, double-walled rim, spiral ribs */}
+      {/* dripper - a true 60° cone, double-walled rim, spiral ribs */}
       <ellipse cx="100" cy="40" rx="58" ry="10" />
       <ellipse cx="100" cy="40" rx="50" ry="8" opacity="0.4" />
       <path d="M42 40 L96 118" />
@@ -130,7 +130,7 @@ function V60() {
         fill={BRASS}
         stroke="none"
       />
-      {/* range server — squat glass, volume ticks, handle */}
+      {/* range server - squat glass, volume ticks, handle */}
       <ellipse cx="92" cy="170" rx="34" ry="7" />
       <path d="M58 170 Q48 208 54 230 Q60 246 92 246 Q124 246 130 230 Q136 208 126 170" />
       <path d="M128 186 Q148 192 142 212 Q140 222 129 224" opacity="0.7" />
@@ -160,7 +160,7 @@ function V60() {
 function AeroPress() {
   return (
     <Frame label="AeroPress · 02" right="80°C" note="press 30s">
-      {/* plunger — presses, holds, releases */}
+      {/* plunger - presses, holds, releases */}
       <g className="animate-press" style={press("13px", "9s")}>
         <path d="M84 40 H116" />
         <path d="M100 40 V64" />
@@ -181,7 +181,7 @@ function AeroPress() {
       <path d="M82 120 H90" opacity="0.5" />
       <path d="M82 136 H90" opacity="0.5" />
       <path d="M82 152 H90" opacity="0.5" />
-      {/* coffee in the chamber — level drops with the press */}
+      {/* coffee in the chamber - level drops with the press */}
       <clipPath id="ap-chamber">
         <path d="M78 90 V176 Q100 186 122 176 V90 Z" />
       </clipPath>
@@ -220,7 +220,7 @@ function AeroPress() {
         fill={BRASS}
         stroke="none"
       />
-      {/* mug — fills as the plunger presses */}
+      {/* mug - fills as the plunger presses */}
       <path d="M80 206 H120 V232 Q120 244 108 244 H92 Q80 244 80 232 Z" />
       <path d="M120 212 Q134 214 132 226 Q131 232 122 232" opacity="0.7" />
       <clipPath id="ap-mug">
@@ -251,7 +251,7 @@ function Espresso() {
       <path d="M58 34 H142 V56 H58 Z" />
       <circle cx="66" cy="45" r="1.8" opacity="0.5" />
       <circle cx="134" cy="45" r="1.8" opacity="0.5" />
-      {/* pressure gauge — live needle */}
+      {/* pressure gauge - live needle */}
       <path d="M142 45 H149.5" opacity="0.7" />
       <circle cx="160" cy="45" r="10.5" />
       <path d="M160 36.5 V39.5" opacity="0.5" strokeWidth="1.2" />
@@ -268,7 +268,7 @@ function Espresso() {
       {/* spouts */}
       <path d="M92 74 L89 84" />
       <path d="M108 74 L111 84" />
-      {/* twin streams — a solid pour with a flowing shimmer over it */}
+      {/* twin streams - a solid pour with a flowing shimmer over it */}
       <path
         d="M89 86 C90.5 106 92 126 93 146"
         stroke={BRASS}
@@ -299,7 +299,7 @@ function Espresso() {
       <path d="M80 150 L83 182 Q85 191 100 191 Q115 191 117 182 L120 150" />
       <path d="M120 158 Q136 161 133 174 Q131 181 122 181" opacity="0.7" />
       <ellipse cx="100" cy="197" rx="27" ry="4" />
-      {/* crema — the level breathes as the shot builds */}
+      {/* crema - the level breathes as the shot builds */}
       <g className="animate-brew" style={rise("-3px")}>
         <path
           d="M84 160 Q100 165 116 160"
@@ -323,7 +323,7 @@ function Moka() {
       <circle cx="137" cy="208" r="2.5" opacity="0.8" strokeWidth="1.2" />
       {/* waist */}
       <path d="M78 176 H122" />
-      {/* top chamber — flares outward, Bialetti-style */}
+      {/* top chamber - flares outward, Bialetti-style */}
       <path d="M82 176 L74 140" />
       <path d="M118 176 L126 140" />
       <path d="M74 140 H126" />
@@ -361,7 +361,7 @@ function Moka() {
       </g>
       {/* water line hint */}
       <path d="M68 216 H132" opacity="0.4" />
-      {/* gas flames — teal like a real burner, flickering out of step */}
+      {/* gas flames - teal like a real burner, flickering out of step */}
       <path
         className="animate-flame"
         style={{ transformOrigin: "88px 249px", animationDelay: "0.2s" }}
@@ -390,7 +390,7 @@ function Moka() {
 function FrenchPress() {
   return (
     <Frame label="French press · 05" right="93°C" note="coarse · 4:00">
-      {/* plunger — a slow full plunge through the steep */}
+      {/* plunger - a slow full plunge through the steep */}
       <g className="animate-press" style={press("30px", "12s")}>
         <circle cx="100" cy="44" r="4.5" />
         <path d="M100 48.5 V111" />
@@ -418,7 +418,7 @@ function FrenchPress() {
       <path d="M134 206 L138 210" opacity="0.7" />
       {/* handle */}
       <path d="M134 112 Q158 114 156 138 Q154 156 134 158" opacity="0.75" />
-      {/* the steep — liquid with grounds floating near the top */}
+      {/* the steep - liquid with grounds floating near the top */}
       <clipPath id="fp-glass">
         <path d="M68 86 H132 V204 H68 Z" />
       </clipPath>
@@ -467,7 +467,7 @@ function ColdBrew() {
       <path d="M136 44 H142" opacity="0.25" />
       <path d="M58 118 H78" opacity="0.25" />
       <path d="M122 118 H142" opacity="0.25" />
-      {/* water flask — a rounded urn */}
+      {/* water flask - a rounded urn */}
       <path d="M74 20 H126" />
       <path d="M74 20 Q64 28 64 42 Q64 62 82 68 H118 Q136 62 136 42 Q136 28 126 20" />
       <clipPath id="cb-vessel">
@@ -490,7 +490,7 @@ function ColdBrew() {
       <path d="M96 76 L100 81 L104 76" />
       <path d="M104 72 H108" opacity="0.8" strokeWidth="1.2" />
       <circle cx="111" cy="72" r="3" opacity="0.8" strokeWidth="1.2" />
-      {/* the slow drip — one unhurried drop at a time */}
+      {/* the slow drip - one unhurried drop at a time */}
       <ellipse
         className="animate-drip"
         style={drip("0ms", "24px", "3.4s")}
@@ -557,7 +557,7 @@ function ColdBrew() {
         fill={BRASS}
         stroke="none"
       />
-      {/* carafe — filling very, very slowly */}
+      {/* carafe - filling very, very slowly */}
       <ellipse cx="100" cy="206" rx="22" ry="4.5" />
       <path d="M78 206 Q71 230 78 239 Q84 246 100 246 Q116 246 122 239 Q129 230 122 206" />
       <clipPath id="cb-carafe">

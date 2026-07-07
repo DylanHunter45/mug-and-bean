@@ -2,7 +2,7 @@
  * Preliminary coffee-label parser: turns raw OCR text into the four structured
  * fields with a per-field confidence (0..1).
  *
- * Scope note: this is the BENCHMARK-grade parser — good enough to
+ * Scope note: this is the BENCHMARK-grade parser - good enough to
  * measure how well each OCR vendor's text can be turned into fields, and shared
  * so the numbers are vendor-comparable. The production parser hardens
  * this with the full process/origin vocabularies, predictive autocomplete, and
@@ -12,10 +12,10 @@
  * Bilingual (EN + FR): the sample dataset is French, so the anchors,
  * abbreviations (`ORIG.`, `PROC.`, `VAR.`, `ALT.`), and vocabularies below cover
  * both languages. The parser matches on de-accented text so `LAVÉ` and `lave`
- * compare equal. Translation to canonical English is NOT done here — it is a
+ * compare equal. Translation to canonical English is NOT done here - it is a
  * separate controlled-vocabulary step downstream.
  *
- * The parser never drops a field silently — a missing field comes back as
+ * The parser never drops a field silently - a missing field comes back as
  * `{ value: null, confidence: 0 }` so the human-in-the-loop confirmation UI
  * can flag it. That "flag, don't drop" contract is load-bearing.
  */
@@ -77,7 +77,7 @@ const PROCESS_KEYWORDS = [
 ];
 
 /**
- * A small origin gazetteer (EN + FR spellings) — enough for benchmark fallback
+ * A small origin gazetteer (EN + FR spellings) - enough for benchmark fallback
  * when the origin line is unlabelled. Matched de-accented.
  */
 // FR spellings first: a French label printing "MEXIQUE" must resolve to
@@ -174,7 +174,7 @@ function toLines(raw: string): string[] {
 function cleanup(s: string): string {
   return s
     .replace(/\s+/g, " ")
-    .replace(/^[\s:;,.\-–—|]+|[\s:;,.\-–—|]+$/g, "")
+    .replace(/^[\s:;,.\---|]+|[\s:;,.\---|]+$/g, "")
     .trim();
 }
 
@@ -195,17 +195,17 @@ const ROASTER_ANCHOR =
   /roast(?:ed by|ery|ers?)\b|torr[ée]fi[ée](?:\s+par)?\b|torr[ée]facteur\b|br[ûu]lerie\b/i;
 // "coffee"/"roasters" (EN) are useful trade signals and do NOT match French
 // "café"; the bare word "café" is deliberately excluded as too common on FR
-// labels. Plural "roasters" matters — several roasters here are "X Roasters".
+// labels. Plural "roasters" matters - several roasters here are "X Roasters".
 const ROASTER_TRADE =
   /\b(coffee|roaster(?:s|y)?|br[ûu]lerie|torr[ée]faction)\b/i;
-// `ORIG.` (abbreviated layout) only — NOT bare "origine", which also appears in
+// `ORIG.` (abbreviated layout) only - NOT bare "origine", which also appears in
 // the footer "DÉCOUVRE L'ORIGINE SUR TH3RDWAVE" and would hijack the field.
 // The labelled layout's country comes from the gazetteer scan instead.
 const ORIGIN_ANCHOR = /\borig(?:\.|in\b|ine\b)/i;
 // Match "PROCÉDÉ" (labelled layout) as a whole BEFORE "proc."/"process"
 // (abbreviated layout), so it isn't sliced to the fragment "ÉDÉ". Accented
 // letters are listed in both cases because JS `/i` doesn't fold them reliably
-// without the `u` flag. "méthode" is excluded — it's the brew-icon row here.
+// without the `u` flag. "méthode" is excluded - it's the brew-icon row here.
 const PROCESS_ANCHOR = /\b(?:proc[éÉeE]d[éÉeE]|process(?:ing)?|proc\.)/i;
 const NOTES_ANCHOR =
   /(?:tasting notes|flavou?r notes|\bnotes(?:\s+de\s+d[ée]gustation)?|d[ée]gustation|ar[ôo]mes?|saveurs?|flavou?rs?)\b/i;
@@ -215,7 +215,7 @@ const FIELD_HEADER =
   /^(?:pays|r[ée]gion|vari[ée]t[ée]|proc[ée]d[ée]|notes|orig(?:\.|ine?)?|var\.?|proc\.?|alt\.?|m[ée]thodes?)\b/i;
 
 /**
- * Flavour vocabulary (de-accented, substring-matched) — enough to spot the
+ * Flavour vocabulary (de-accented, substring-matched) - enough to spot the
  * tasting-notes line on the abbreviated layout, where notes are printed with no
  * "notes" header and the bullets OCR as plain spaces. A line naming ≥2 of these
  * is the notes line. The production parser replaces this with the full `flavour_tags` vocab.
@@ -335,7 +335,7 @@ function extractRoaster(lines: string[]): FieldExtraction {
   const candidates = lines.filter((l) => !isNoise(l)).map((l) => cleanup(l));
 
   // 2. The roaster name is typically printed more than once (logo + wordmark),
-  // while the product name and crumbs appear once — so the most-repeated
+  // while the product name and crumbs appear once - so the most-repeated
   // candidate is usually the roaster. Ties break toward the later line, since
   // the big product name leads the label.
   const groups = new Map<
@@ -361,7 +361,7 @@ function extractRoaster(lines: string[]): FieldExtraction {
   }
 
   // 4. Last resort: the first non-chrome line. On the labelled layout this is
-  // usually the roaster; on the abbreviated layout it may be the product name —
+  // usually the roaster; on the abbreviated layout it may be the product name -
   // A fuzzy match against the `roasters` catalog is the real fix.
   if (candidates.length > 0) return { value: candidates[0], confidence: 0.4 };
   return NONE;
@@ -395,7 +395,7 @@ function extractProcess(lines: string[], raw: string): FieldExtraction {
     const v = afterAnchor(line, PROCESS_ANCHOR);
     if (v) return { value: cleanup(v), confidence: 0.9 };
   }
-  // 2. Keyword scan over the whole label — also covers "PROCÉDÉ" alone on a line
+  // 2. Keyword scan over the whole label - also covers "PROCÉDÉ" alone on a line
   // (its value is elsewhere, and OCR often reorders the labelled layout).
   const d = deaccent(raw);
   for (const keyword of PROCESS_KEYWORDS) {

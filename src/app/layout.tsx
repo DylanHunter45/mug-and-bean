@@ -7,14 +7,14 @@ import { getSiteUrl } from "@/lib/site";
 
 import "./globals.css";
 
-// Body / UI — clean humanist grotesque ("Origin Ledger" system, not Inter).
+// Body / UI - clean humanist grotesque ("Origin Ledger" system, not Inter).
 const hanken = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
 });
 
-// Display / headlines + wordmark — an editorial serif with character.
+// Display / headlines + wordmark - an editorial serif with character.
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
@@ -22,7 +22,7 @@ const fraunces = Fraunces({
   axes: ["opsz"],
 });
 
-// Data voice — cupping scores, altitude, ratios, catalogue numbers.
+// Data voice - cupping scores, altitude, ratios, catalogue numbers.
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -31,9 +31,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 const SITE_URL = getSiteUrl();
-const TITLE = "Mug & Bean — Your digital coffee cellar";
+const TITLE = "Mug & Bean - Your digital coffee cellar";
 const DESCRIPTION =
-  "Scan the bag, log the brew, score the cup. Mug & Bean keeps a searchable archive of the specialty coffee you drink — origin, altitude, process, and how the cup actually scored — and learns your palate.";
+  "Scan the bag, log the brew, score the cup. Mug & Bean keeps a searchable archive of the specialty coffee you drink - origin, altitude, process, and how the cup actually scored - and learns your palate.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

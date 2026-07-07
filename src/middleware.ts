@@ -2,7 +2,7 @@
  * Next.js middleware.
  *
  * Lives in `src/` (not the project root) because this project uses a `src/`
- * directory — Next.js only detects middleware at `src/middleware.ts` in that
+ * directory - Next.js only detects middleware at `src/middleware.ts` in that
  * layout. It delegates to `updateSession`, which refreshes the Supabase auth
  * session on every request and redirects unauthenticated traffic away from
  * protected routes. The matcher skips static assets and image files so we only

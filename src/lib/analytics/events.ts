@@ -1,12 +1,12 @@
 /**
- * Analytics event tracking — framework-agnostic, provider-thin.
+ * Analytics event tracking - framework-agnostic, provider-thin.
  *
  * Page views are counted automatically by the Plausible script (loaded, when
  * configured, by `PlausibleScript`). This module covers the *custom* conversion
  * events the marketing surface cares about. It's deliberately not coupled to
  * React so any surface (or a future native shell) can report the same events.
  *
- * When no analytics provider is loaded (`window.plausible` undefined — e.g.
+ * When no analytics provider is loaded (`window.plausible` undefined - e.g.
  * local dev, or before the deferred script arrives) every call is a safe no-op.
  */
 

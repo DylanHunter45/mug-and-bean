@@ -1,5 +1,5 @@
 /**
- * Section — a full-width page band providing vertical rhythm. Pair
+ * Section - a full-width page band providing vertical rhythm. Pair
  * with a `<Container>` for horizontal layout. Renders a semantic `<section>`.
  */
 import { cn } from "@/lib/utils";

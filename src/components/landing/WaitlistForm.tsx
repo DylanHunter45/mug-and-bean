@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * WaitlistForm — the landing page's frictionless email capture.
+ * WaitlistForm - the landing page's frictionless email capture.
  *
  * Owns the visual form, client-side email validation, and the success/incentive
  * states; it's the scroll target the Hero CTAs jump to. On submit it posts to
  * `POST /api/waitlist`, which persists the address, re-validates server-side,
- * and reports whether this was a new sign-up or an already-subscribed address —
+ * and reports whether this was a new sign-up or an already-subscribed address -
  * both are treated as success (a duplicate is never shown as an error).
  */
 import { useEffect, useRef, useState } from "react";
@@ -68,7 +68,7 @@ export function WaitlistForm() {
       const alreadyOnList = data.status === "already_subscribed";
       setOutcome(alreadyOnList ? "already_subscribed" : "subscribed");
       setStatus("success");
-      // Report the conversion — distinguishing a fresh sign-up from a repeat so
+      // Report the conversion - distinguishing a fresh sign-up from a repeat so
       // the true new-signup count (the founding-tasters KPI) stays clean.
       trackEvent(
         alreadyOnList ? "waitlist_already_subscribed" : "waitlist_submit",
@@ -96,8 +96,8 @@ export function WaitlistForm() {
         </p>
         <p className="max-w-sm text-sm text-ink-soft">
           {alreadyOnList
-            ? "Your founding spot in the cellar is still reserved — we'll email you the moment Mug & Bean opens."
-            : "We'll email you the moment Mug & Bean opens — your founding spot in the cellar is reserved."}
+            ? "Your founding spot in the cellar is still reserved - we'll email you the moment Mug & Bean opens."
+            : "We'll email you the moment Mug & Bean opens - your founding spot in the cellar is reserved."}
         </p>
       </div>
     );
@@ -135,7 +135,7 @@ export function WaitlistForm() {
           disabled={status === "submitting"}
           className={buttonClasses({ size: "lg", className: "shrink-0" })}
         >
-          {status === "submitting" ? "Joining…" : "Join the waitlist"}
+          {status === "submitting" ? "Joining..." : "Join the waitlist"}
         </button>
       </div>
 
@@ -148,7 +148,7 @@ export function WaitlistForm() {
       >
         {invalid && "Enter a valid email address."}
         {status === "error" &&
-          "Something went wrong — please try again in a moment."}
+          "Something went wrong - please try again in a moment."}
       </p>
     </form>
   );

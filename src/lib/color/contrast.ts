@@ -19,7 +19,7 @@ export const AA_LARGE = 3;
 /** UI component / graphical-object boundary (WCAG 1.4.11). */
 export const AA_NON_TEXT = 3;
 
-/** Linearise a single 0–255 sRGB channel (gamma-expanded). */
+/** Linearise a single 0-255 sRGB channel (gamma-expanded). */
 function linearise(channel8bit: number): number {
   const c = channel8bit / 255;
   return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
@@ -42,9 +42,9 @@ export function contrastRatio(a: RGB, b: RGB): number {
 }
 
 /**
- * Alpha-composite `fg` (with alpha 0–1) over an opaque `bg`, returning the
+ * Alpha-composite `fg` (with alpha 0-1) over an opaque `bg`, returning the
  * resulting opaque colour. Used for tinted fills like a badge's `bg-x/[0.08]`,
- * whose effective background is the tint over the page — the worst case for the
+ * whose effective background is the tint over the page - the worst case for the
  * text drawn on top.
  */
 export function compositeOver(fg: RGB, alpha: number, bg: RGB): RGB {

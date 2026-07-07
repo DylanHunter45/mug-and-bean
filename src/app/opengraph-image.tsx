@@ -1,16 +1,16 @@
 import { ImageResponse } from "next/og";
 
-// The image generator (satori + resvg) runs on the edge runtime — the Node
+// The image generator (satori + resvg) runs on the edge runtime - the Node
 // runtime mis-resolves next/og's internal asset URLs ("Invalid URL").
 export const runtime = "edge";
 
 // Rendered once at build time (static route) and served as the social preview.
 export const alt =
-  "Mug & Bean — catalogue every coffee worth remembering. Scan the bag, log the brew, score the cup.";
+  "Mug & Bean - catalogue every coffee worth remembering. Scan the bag, log the brew, score the cup.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Origin Ledger palette (globals.css tokens, resolved to hex — CSS vars aren't
+// Origin Ledger palette (globals.css tokens, resolved to hex - CSS vars aren't
 // available inside the OG renderer).
 const PAPER = "#e8dcc9";
 const SURFACE = "#f7f0e4";
@@ -22,7 +22,7 @@ const CHERRY = "#b43a2f";
 const SURVEY = "#3c6270";
 
 /**
- * Fetch a Google font as a binary satori can parse (ttf/otf/woff — not woff2).
+ * Fetch a Google font as a binary satori can parse (ttf/otf/woff - not woff2).
  * An old User-Agent nudges Google into serving woff. Any failure returns null
  * so the image still renders (in satori's default font) and the build survives
  * an offline/blocked network.
@@ -91,7 +91,7 @@ export default async function OpengraphImage() {
         position: "relative",
       }}
     >
-      {/* Contour rings — the topographic / elevation motif. */}
+      {/* Contour rings - the topographic / elevation motif. */}
       <div
         style={{
           position: "absolute",
@@ -183,7 +183,7 @@ export default async function OpengraphImage() {
             maxWidth: 820,
           }}
         >
-          Scan the bag, log the brew, score the cup — a searchable archive of
+          Scan the bag, log the brew, score the cup - a searchable archive of
           the specialty coffee you drink, that learns your palate.
         </div>
       </div>

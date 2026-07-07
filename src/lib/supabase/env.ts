@@ -5,7 +5,7 @@
  * fails loudly with an actionable message instead of surfacing as a confusing
  * "Invalid URL" deep inside the SDK. Copy `.env.example` → `.env.local` and
  * fill these in (point them at the local stack from `npm run db:start`, or a
- * hosted project — see supabase/README.md).
+ * hosted project - see supabase/README.md).
  */
 export interface SupabaseEnv {
   url: string;
@@ -26,7 +26,7 @@ export function getOptionalSupabaseEnv(): SupabaseEnv | null {
 
 /**
  * Read the public Supabase env vars, throwing an actionable error if either is
- * missing. Use this where the code is about to perform a real auth operation —
+ * missing. Use this where the code is about to perform a real auth operation -
  * failing loudly beats a confusing "Invalid URL" deep in the SDK.
  */
 export function getSupabaseEnv(): SupabaseEnv {

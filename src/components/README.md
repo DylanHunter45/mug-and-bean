@@ -37,13 +37,13 @@ Lighthouse at it.
 ### Accessibility / contrast
 
 Every text/background pairing used by these components passes **WCAG AA**
-(≥4.5:1 for body text) — and this is **enforced in CI**, not just asserted here:
+(≥4.5:1 for body text) - and this is **enforced in CI**, not just asserted here:
 [`src/lib/color/contrast.test.ts`](../lib/color/contrast.test.ts) parses the
 real tokens out of `globals.css` and fails the build if any documented pairing
 drops below AA. Verified ratios on warm `paper`: ink ~12:1, ink-soft ~6.5:1,
 muted ~5:1, cherry-deep ~5.5:1, survey ~4.9:1, brass-deep ~5.2:1; and **white**
 text on `cherry`/`survey` fills (~5.8:1 / ~6.6:1) for accent buttons and filled
-chips. (`brass` itself is ~2.9:1 on paper — fills/decoration only; use
+chips. (`brass` itself is ~2.9:1 on paper - fills/decoration only; use
 `brass-deep` for brass-toned text.) Every interactive element has a visible
 `focus-visible` ring (`ring-cherry`). Motion respects `prefers-reduced-motion`.
 Cross-check with axe / Lighthouse against `/styleguide`.
@@ -60,7 +60,7 @@ Props: `variant` (`primary` | `secondary` | `ghost`, default `primary`),
 ```tsx
 <Button onClick={save}>Save coffee</Button>
 <Button variant="secondary" size="lg">Cancel</Button>
-<Button variant="ghost" size="sm" disabled>Loading…</Button>
+<Button variant="ghost" size="sm" disabled>Loading...</Button>
 ```
 
 For a link that **looks** like a button, use `buttonClasses()` on a `<Link>` /
@@ -118,7 +118,7 @@ Full-width band with vertical rhythm. Compose with `Container`:
 
 ```tsx
 <Section className="border-t border-line/60">
-  <Container>{/* … */}</Container>
+  <Container>{/* ... */}</Container>
 </Section>
 ```
 
@@ -126,7 +126,7 @@ Full-width band with vertical rhythm. Compose with `Container`:
 
 ## Responsiveness
 
-Components are fluid and verified at the three target breakpoints — **375px
+Components are fluid and verified at the three target breakpoints - **375px
 (mobile)**, **768px (tablet)**, **1280px (desktop)**. `display-lg` uses a
 `clamp()` so the hero headline scales without breakpoints; `Container` caps
 width and adjusts gutters; `Section` increases vertical padding from `lg:` up.

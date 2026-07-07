@@ -6,7 +6,7 @@
  * refreshed auth cookies back.
  *
  * `cookies()` is request-scoped, so a fresh client must be created per request
- * — never cache the returned client across requests (it would leak one user's
+ * - never cache the returned client across requests (it would leak one user's
  * session into another's). Hence this is a function, not a module singleton.
  */
 import { cookies } from "next/headers";
@@ -32,7 +32,7 @@ export async function createClient() {
         } catch {
           // `setAll` was called from a Server Component, where cookies are
           // read-only. This is safe to ignore as long as the root middleware
-          // (which CAN write cookies) is refreshing sessions — which it is.
+          // (which CAN write cookies) is refreshing sessions - which it is.
         }
       },
     },

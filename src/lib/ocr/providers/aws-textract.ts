@@ -1,9 +1,9 @@
 /**
- * AWS Textract adapter — DetectDocumentText via the AWS SDK v3.
+ * AWS Textract adapter - DetectDocumentText via the AWS SDK v3.
  *
  * The SDK (`@aws-sdk/client-textract`) is an OPTIONAL, benchmark-only
  * dependency. It is imported lazily through a non-literal specifier so that
- * `tsc` and the Next build never require it to be installed — only the
+ * `tsc` and the Next build never require it to be installed - only the
  * benchmark runner needs it, and only when AWS is being measured.
  * Install it before running the AWS leg:  npm i -D @aws-sdk/client-textract
  *

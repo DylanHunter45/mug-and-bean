@@ -1,6 +1,6 @@
 /**
  * Shared OCR types for the benchmark and the scan pipeline.
- * Framework-agnostic on purpose — no React, no Next imports — so a future
+ * Framework-agnostic on purpose - no React, no Next imports - so a future
  * React Native client can consume the same logic.
  */
 

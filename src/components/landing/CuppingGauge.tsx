@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * CuppingGauge — a radial score dial. The cherry arc fills to `score`/`max`
+ * CuppingGauge - a radial score dial. The cherry arc fills to `score`/`max`
  * while the centre number counts up, in one synced motion on mount. This is the
  * hero's single focal flourish (see DESIGN.md → Motion). Honours
  * `prefers-reduced-motion` by rendering the final state immediately.
@@ -39,7 +39,7 @@ export function CuppingGauge({
     const start = performance.now();
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / durationMs);
-      // easeOutExpo — confident, decisive, settles at rest.
+      // easeOutExpo - confident, decisive, settles at rest.
       const eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
       setProgress(eased);
       if (t < 1) frame.current = requestAnimationFrame(tick);

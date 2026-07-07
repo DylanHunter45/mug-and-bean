@@ -3,13 +3,13 @@
  *
  * Framework-agnostic on purpose: the same rules run client-side (fast feedback
  * in the form) and server-side (the authoritative gate in the capture
- * endpoint), so the two can never drift apart. No React, no Supabase imports —
+ * endpoint), so the two can never drift apart. No React, no Supabase imports -
  * safe to pull into a `"use client"` component and an API route alike.
  */
 
 /**
  * Pragmatic email shape check: a non-empty local part, an `@`, and a dotted
- * domain, with no spaces. Deliberately not RFC 5322 — the goal is to reject
+ * domain, with no spaces. Deliberately not RFC 5322 - the goal is to reject
  * obvious typos, not to adjudicate exotic-but-legal addresses (deliverability
  * is the real test, and that only happens when we email them).
  */

@@ -3,7 +3,7 @@
  *
  * Each entry pairs a provider with a credential check and a published
  * per-1,000-page price used only for the cost column of the report. PRICES ARE
- * ESTIMATES — verify against the vendor's current pricing page before quoting
+ * ESTIMATES - verify against the vendor's current pricing page before quoting
  * them in the ADR (see PRICING_AS_OF).
  */
 import type { OcrProvider } from "../types";
@@ -15,7 +15,7 @@ export interface ProviderEntry {
   /** Whether credentials for this provider are present in the environment. */
   hasCredentials: () => boolean;
   /**
-   * Published list price per 1,000 pages, USD. ESTIMATE — see PRICING_AS_OF.
+   * Published list price per 1,000 pages, USD. ESTIMATE - see PRICING_AS_OF.
    * Google Cloud Vision Document Text Detection and AWS Textract
    * DetectDocumentText were both ~$1.50 / 1,000 pages at the first pricing
    * tier when this was written.
@@ -25,7 +25,7 @@ export interface ProviderEntry {
   pricingUrl: string;
 }
 
-/** When the bundled price estimates were last checked — re-verify if stale. */
+/** When the bundled price estimates were last checked - re-verify if stale. */
 export const PRICING_AS_OF = "2026-06-13";
 
 export const PROVIDERS: Record<string, ProviderEntry> = {

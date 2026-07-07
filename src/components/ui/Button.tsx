@@ -1,9 +1,9 @@
 /**
- * Button — the primary interactive control.
+ * Button - the primary interactive control.
  *
  * `buttonClasses()` is exported separately so the same look can be applied to
  * non-button elements (e.g. a Next.js `<Link>` styled as a CTA) without losing
- * semantics — see src/components/README.md.
+ * semantics - see src/components/README.md.
  */
 import { cn } from "@/lib/utils";
 

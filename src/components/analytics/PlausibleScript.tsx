@@ -1,7 +1,7 @@
 import Script from "next/script";
 
 /**
- * Loads Plausible Analytics — privacy-first, cookie-free, ~1KB so it doesn't
+ * Loads Plausible Analytics - privacy-first, cookie-free, ~1KB so it doesn't
  * threaten the landing page's performance budget.
  *
  * Gated on `NEXT_PUBLIC_ANALYTICS_DOMAIN`: with no domain configured (local

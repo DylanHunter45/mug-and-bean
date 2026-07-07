@@ -1,9 +1,9 @@
 /**
- * Waitlist capture endpoint — POST /api/waitlist
+ * Waitlist capture endpoint - POST /api/waitlist
  *
  * Persists a landing-page sign-up to the `waitlist` table. The table is locked
  * away from the public Data API roles, so this runs with the service-role
- * client (see `createAdminClient`) — the single server-side writer.
+ * client (see `createAdminClient`) - the single server-side writer.
  *
  * Behaviour:
  *   - Re-validates the email server-side (the form validates too; this is the
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
 
   // `ignoreDuplicates` → INSERT ... ON CONFLICT (email) DO NOTHING. The select
   // returns the row only when one was actually inserted, so an empty result
-  // means "already on the list" — no error-code sniffing, no info leak.
+  // means "already on the list" - no error-code sniffing, no info leak.
   const { data, error } = await supabase
     .from("waitlist")
     .upsert(
