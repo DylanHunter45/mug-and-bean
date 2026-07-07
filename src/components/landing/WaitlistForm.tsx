@@ -11,6 +11,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 
+import { trackEvent } from "@/lib/analytics/events";
 import { buttonClasses, inputClasses } from "@/components/ui";
 import { isValidEmail } from "@/lib/waitlist/validate";
 
@@ -64,10 +65,14 @@ export function WaitlistForm() {
       });
       if (!response.ok) throw new Error(`Request failed: ${response.status}`);
       const data = (await response.json()) as WaitlistResponse;
-      setOutcome(
-        data.status === "already_subscribed" ? data.status : "subscribed",
-      );
+      const alreadyOnList = data.status === "already_subscribed";
+      setOutcome(alreadyOnList ? "already_subscribed" : "subscribed");
       setStatus("success");
+      // Report the conversion — distinguishing a fresh sign-up from a repeat so
+      // the true new-signup count (the founding-tasters KPI) stays clean.
+      trackEvent(
+        alreadyOnList ? "waitlist_already_subscribed" : "waitlist_submit",
+      );
     } catch {
       setStatus("error");
     }

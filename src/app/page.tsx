@@ -91,7 +91,11 @@ export default function Home() {
             >
               Sign in
             </Link>
-            <Link href="#waitlist" className={buttonClasses({ size: "md" })}>
+            <Link
+              href="#waitlist"
+              data-cta="nav"
+              className={buttonClasses({ size: "md" })}
+            >
               Join the waitlist
             </Link>
           </nav>
@@ -131,7 +135,11 @@ export default function Home() {
               className="reveal flex flex-wrap items-center gap-3"
               style={{ animationDelay: "240ms" }}
             >
-              <Link href="#waitlist" className={buttonClasses({ size: "lg" })}>
+              <Link
+                href="#waitlist"
+                data-cta="hero"
+                className={buttonClasses({ size: "lg" })}
+              >
                 Join the waitlist
               </Link>
               <Link
@@ -249,6 +257,7 @@ export default function Home() {
               {/* The next line in the ledger is the visitor's. */}
               <Link
                 href="#waitlist"
+                data-cta="catalogue"
                 className="group grid grid-cols-[3rem_1fr_auto] items-center gap-4 px-5 py-4 transition-colors hover:bg-surface-2 sm:grid-cols-[3.5rem_1.4fr_1fr_5rem_4rem] sm:px-7"
               >
                 <span className="font-mono text-sm text-muted transition-colors group-hover:text-cherry-deep">
