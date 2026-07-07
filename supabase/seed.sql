@@ -1,0 +1,14 @@
+-- ---------------------------------------------------------------------------
+-- Seed data is NOT loaded here.
+--
+-- The coffee catalog seed is a TypeScript pipeline, not static SQL, because it
+-- reads the founder's label corpus (benchmark/ocr/ground-truth.json),
+-- canonicalises the French label text, and must run against local AND hosted
+-- environments. Run it explicitly:
+--
+--   npm run db:seed              # upsert into the configured database
+--   npm run db:seed -- --dry-run # transform + report only
+--
+-- See supabase/seed/README.md. This file exists so `supabase db reset` (which is
+-- configured to load ./seed.sql) has something to load and does not warn.
+-- ---------------------------------------------------------------------------

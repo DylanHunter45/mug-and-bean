@@ -64,8 +64,11 @@ select is(
   'Alice sees her own rating'
 );
 
+-- Scope the read to the fixture row so the assertion holds whether or not the
+-- catalog has been seeded (public-read is what is under test, not the count).
 select is(
-  (select count(*)::int from public.coffees),
+  (select count(*)::int from public.coffees
+     where id = 'aaaaaaaa-0000-0000-0000-000000000001'),
   1,
   'Alice can read the shared catalog'
 );
@@ -83,7 +86,8 @@ select is(
 );
 
 select is(
-  (select count(*)::int from public.coffees),
+  (select count(*)::int from public.coffees
+     where id = 'aaaaaaaa-0000-0000-0000-000000000001'),
   1,
   'Bob can still read the shared catalog'
 );
@@ -105,7 +109,7 @@ select is(
   'Bob can read ratings (community-average visibility)'
 );
 
--- Bob's blind mutation attempts — under RLS these match zero of Alice's rows.
+-- Bob's blind mutation attempts - under RLS these match zero of Alice's rows.
 update public.user_coffees set personal_notes = 'hacked';
 delete from public.user_coffees;
 update public.ratings set score = 1;

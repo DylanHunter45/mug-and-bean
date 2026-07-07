@@ -23,6 +23,7 @@
     "db:test": "supabase test db",
     "db:diff": "supabase db diff",
     "db:lint": "supabase db lint",
+    "db:seed": "tsx supabase/seed/seed.ts",
     "prepare": "husky"
   },
   "dependencies": {
