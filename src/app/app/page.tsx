@@ -6,6 +6,9 @@
  * Reads the signed-in user from the cookie-bound server
  * client to confirm the session is readable in a Server Component.
  */
+import Link from "next/link";
+
+import { buttonClasses } from "@/components/ui";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function AppHomePage() {
@@ -22,6 +25,11 @@ export default async function AppHomePage() {
         <span className="font-medium text-ink">{user?.email}</span>. This is the
         protected area - the future home of &ldquo;My Coffees&rdquo;.
       </p>
+      <div>
+        <Link href="/app/scan" className={buttonClasses({ size: "lg" })}>
+          Scan a label
+        </Link>
+      </div>
     </div>
   );
 }
