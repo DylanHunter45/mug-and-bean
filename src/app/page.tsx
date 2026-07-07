@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { BrewShowcase } from "@/components/landing/BrewDiagram";
 import { CuppingGauge } from "@/components/landing/CuppingGauge";
+import { WaitlistForm } from "@/components/landing/WaitlistForm";
 import { Badge, Container, Section, buttonClasses } from "@/components/ui";
 import type { BadgeTone } from "@/components/ui";
 
@@ -90,7 +91,7 @@ export default function Home() {
             >
               Sign in
             </Link>
-            <Link href="/signup" className={buttonClasses({ size: "md" })}>
+            <Link href="#waitlist" className={buttonClasses({ size: "md" })}>
               Join the waitlist
             </Link>
           </nav>
@@ -130,7 +131,7 @@ export default function Home() {
               className="reveal flex flex-wrap items-center gap-3"
               style={{ animationDelay: "240ms" }}
             >
-              <Link href="/signup" className={buttonClasses({ size: "lg" })}>
+              <Link href="#waitlist" className={buttonClasses({ size: "lg" })}>
                 Join the waitlist
               </Link>
               <Link
@@ -247,7 +248,7 @@ export default function Home() {
               ))}
               {/* The next line in the ledger is the visitor's. */}
               <Link
-                href="/signup"
+                href="#waitlist"
                 className="group grid grid-cols-[3rem_1fr_auto] items-center gap-4 px-5 py-4 transition-colors hover:bg-surface-2 sm:grid-cols-[3.5rem_1.4fr_1fr_5rem_4rem] sm:px-7"
               >
                 <span className="font-mono text-sm text-muted transition-colors group-hover:text-cherry-deep">
@@ -274,8 +275,9 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* Closing CTA. */}
-      <Section className="border-t border-line/70">
+      {/* Closing CTA — the email capture the Hero CTAs scroll to. scroll-mt
+          clears the sticky header when jumped to via #waitlist. */}
+      <Section id="waitlist" className="scroll-mt-24 border-t border-line/70">
         <Container>
           <div className="relative overflow-hidden rounded-card border border-line bg-surface px-6 py-14 text-center shadow-card">
             <div
@@ -283,6 +285,9 @@ export default function Home() {
               className="topo animate-drift pointer-events-none absolute inset-0 opacity-50 [--topo-x:50%] [--topo-y:120%] [mask-image:radial-gradient(circle_at_50%_120%,black,transparent_70%)]"
             />
             <div className="relative flex flex-col items-center gap-6">
+              <span className="font-mono text-xs uppercase tracking-[0.16em] text-cherry-deep">
+                Early access · 500 founding spots
+              </span>
               <h2 className="max-w-xl text-display-sm font-semibold text-ink">
                 Be among the first to shelve a coffee.
               </h2>
@@ -290,9 +295,9 @@ export default function Home() {
                 Early tasters get first access when Mug &amp; Bean opens, plus a
                 founding spot in the cellar. Free to keep.
               </p>
-              <Link href="/signup" className={buttonClasses({ size: "lg" })}>
-                Join the waitlist
-              </Link>
+              <div className="flex w-full justify-center pt-1">
+                <WaitlistForm />
+              </div>
             </div>
           </div>
         </Container>

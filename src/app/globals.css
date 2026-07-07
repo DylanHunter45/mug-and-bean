@@ -37,6 +37,12 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+html {
+  /* In-page CTAs (Hero → #waitlist) glide instead of jumping. Disabled under
+     reduced-motion by the block below. */
+  scroll-behavior: smooth;
+}
+
 body {
   @apply bg-paper font-sans text-ink antialiased;
   /* Atmosphere: two faint warm washes in opposite corners, fixed, so the paper
@@ -326,6 +332,9 @@ body {
 
 /* Respect reduced-motion: show everything, drop the movement. */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {

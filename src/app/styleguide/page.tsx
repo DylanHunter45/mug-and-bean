@@ -17,8 +17,8 @@ import {
 } from "@/lib/color/contrast";
 
 /**
- * Component gallery / living style guide for the "Origin Ledger" base library
- * (TASK-006). A kitchen-sink of every primitive in every variant so the
+ * Component gallery / living style guide for the "Origin Ledger" base library.
+ * A kitchen-sink of every primitive in every variant so the
  * components can be eyeballed at the three target breakpoints (375 / 768 /
  * 1280px — just resize) and audited with axe / Lighthouse against a single
  * page. Internal reference, kept out of search.
@@ -104,7 +104,7 @@ export default function StyleguidePage() {
       <Section className="border-b border-line">
         <Container>
           <p className="font-mono text-eyebrow uppercase text-cherry-deep">
-            TASK-006 · Component Library
+            Component Library
           </p>
           <h1 className="mt-3 text-display-lg text-ink">Origin Ledger</h1>
           <p className="mt-4 max-w-2xl text-lg text-ink-soft">
