@@ -1,17 +1,24 @@
 "use client";
 
 /**
- * ScanCamera - the live label viewfinder and the first step of the scan
- * pipeline (capture -> OCR -> parse -> confirm). It requests the rear camera via
- * WebRTC, previews the stream in a cartographic viewfinder, and on the shutter
- * tap hands a JPEG `File` to `onCapture` for downstream processing. Retake and
- * preview are the parent's job - this component only produces frames.
+ * ScanCamera - captures a coffee-bag label as a JPEG `File` and hands it to
+ * `onCapture`; the first step of the scan pipeline (capture -> OCR -> parse ->
+ * confirm). Retake and preview are the parent's job - this only produces frames.
  *
- * Graceful degradation is first-class, not an afterthought: a file-upload
- * fallback (a plain picker - pick an existing photo from the gallery/files) is
- * always present, so a denied permission or an unsupported browser is never a
- * dead end. All the non-React logic lives in `@/lib/scan/camera` so a native
- * shell can reuse it.
+ * Capture strategy is device-aware, because a phone label shot has to be sharp
+ * enough for OCR:
+ *
+ * - On touch devices we use the OS camera via `<input capture="environment">`.
+ *   A live `getUserMedia` preview on a phone focuses poorly up close (fixed lens,
+ *   ~10cm minimum focus, no macro switch, capped stream resolution), so it comes
+ *   out blurry; the native camera shoots full-resolution with real autofocus.
+ * - On desktop (no touch) there's no native camera app, so we run the live
+ *   WebRTC viewfinder with a shutter button. On the desktop scan flow this is a
+ *   fallback anyway - the phone handoff is the primary path.
+ *
+ * A plain "upload a photo" picker (no `capture`, so mobile can reach the gallery)
+ * is always present, so a denied permission or unsupported browser is never a
+ * dead end. All non-React logic lives in `@/lib/scan/camera` for native reuse.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -36,6 +43,116 @@ export interface ScanCameraProps {
 }
 
 export function ScanCamera({ onCapture, className }: ScanCameraProps) {
+  // null until measured, so we don't flash the desktop viewfinder on a phone.
+  const [isTouch, setIsTouch] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setIsTouch(
+      typeof window !== "undefined" &&
+        window.matchMedia?.("(pointer: coarse)").matches === true,
+    );
+  }, []);
+
+  const handleFile = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      // Reset so re-picking the same file still fires onChange.
+      event.target.value = "";
+      if (file) onCapture(file);
+    },
+    [onCapture],
+  );
+
+  if (isTouch === null) {
+    return (
+      <div className={className}>
+        <div className="h-72 animate-pulse rounded-card bg-surface-2" />
+      </div>
+    );
+  }
+
+  return (
+    <div className={className}>
+      {isTouch ? (
+        <NativeCapture onFile={handleFile} />
+      ) : (
+        <LiveViewfinder onCapture={onCapture} onFile={handleFile} />
+      )}
+    </div>
+  );
+}
+
+/**
+ * Touch path: the native OS camera for a sharp shot, plus a gallery picker.
+ * Two separate inputs - `capture` forces the camera (great for a fresh photo)
+ * but blocks the gallery, so the "upload" input deliberately omits it.
+ */
+function NativeCapture({
+  onFile,
+}: {
+  onFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-6 rounded-card border border-line bg-surface px-6 py-10 text-center">
+      <ViewfinderGlyph />
+      <div className="flex flex-col gap-1">
+        <p className="font-display text-lg font-semibold text-ink">
+          Photograph the label
+        </p>
+        <p className="max-w-xs text-sm text-ink-soft">
+          Use your camera for a sharp, full-resolution shot - much clearer than
+          an in-browser preview. Fill the frame with the label.
+        </p>
+      </div>
+      <div className="flex w-full max-w-xs flex-col gap-3">
+        <label
+          className={buttonClasses({
+            size: "lg",
+            className: "cursor-pointer",
+          })}
+        >
+          Take a photo
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={onFile}
+            className="sr-only"
+          />
+        </label>
+        <label
+          className={buttonClasses({
+            variant: "secondary",
+            size: "md",
+            className: "cursor-pointer",
+          })}
+        >
+          Upload from library
+          {/* No `capture`, so mobile opens the gallery/files instead of forcing
+              the camera. */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onFile}
+            className="sr-only"
+          />
+        </label>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Desktop path: a live WebRTC viewfinder with a shutter. Kept off phones, where
+ * the native camera gives a far sharper capture (see the module docstring).
+ */
+function LiveViewfinder({
+  onCapture,
+  onFile,
+}: {
+  onCapture: (file: File) => void;
+  onFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
   const [phase, setPhase] = useState<Phase>("initializing");
   const [error, setError] = useState<CameraError | null>(null);
   // A transient reticle at the last tapped point, cleared after it pulses.
@@ -110,16 +227,6 @@ export function ScanCamera({ onCapture, className }: ScanCameraProps) {
     }
   }, [onCapture, phase]);
 
-  const handleFile = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      // Reset so re-picking the same file still fires onChange.
-      event.target.value = "";
-      if (file) onCapture(file);
-    },
-    [onCapture],
-  );
-
   // Tap the viewfinder to refocus at that spot (where the platform allows it),
   // and drop a reticle so the tap feels acknowledged even when it doesn't.
   const handleFocusTap = useCallback(
@@ -145,8 +252,8 @@ export function ScanCamera({ onCapture, className }: ScanCameraProps) {
   const showViewfinder = phase === "initializing" || phase === "streaming";
 
   return (
-    <div className={className}>
-      <div className="relative aspect-[3/4] max-h-[60dvh] w-full overflow-hidden rounded-card border border-line bg-ink/95 sm:aspect-[4/3] sm:max-h-none">
+    <div>
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-card border border-line bg-ink/95">
         {showViewfinder ? (
           <>
             <video
@@ -202,14 +309,10 @@ export function ScanCamera({ onCapture, className }: ScanCameraProps) {
           })}
         >
           {phase === "streaming" ? "Upload a photo instead" : "Upload a photo"}
-          {/* No `capture` attribute: the live viewfinder already handles "take a
-              photo now", so this is a true file picker - on mobile that lets the
-              user choose an existing photo from their gallery/files (with
-              `capture` set, mobile forces the camera and blocks the gallery). */}
           <input
             type="file"
             accept="image/*"
-            onChange={handleFile}
+            onChange={onFile}
             className="sr-only"
           />
         </label>
@@ -233,6 +336,22 @@ function ViewfinderFrame() {
         Frame the label · tap to focus
       </p>
     </div>
+  );
+}
+
+/** Static survey-bracket glyph for the native-camera prompt (echoes the frame). */
+function ViewfinderGlyph() {
+  return (
+    <span
+      aria-hidden
+      className="relative flex h-16 w-16 items-center justify-center"
+    >
+      <span className="absolute left-0 top-0 h-5 w-5 border-l-2 border-t-2 border-survey" />
+      <span className="absolute right-0 top-0 h-5 w-5 border-r-2 border-t-2 border-survey" />
+      <span className="absolute bottom-0 left-0 h-5 w-5 border-b-2 border-l-2 border-survey" />
+      <span className="absolute bottom-0 right-0 h-5 w-5 border-b-2 border-r-2 border-survey" />
+      <span className="h-3 w-3 rounded-full bg-cherry" />
+    </span>
   );
 }
 
