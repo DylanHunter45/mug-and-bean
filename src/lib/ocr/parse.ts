@@ -19,6 +19,14 @@
  * `{ value: null, confidence: 0 }` so the human-in-the-loop confirmation UI
  * can flag it. That "flag, don't drop" contract is load-bearing.
  */
+import {
+  afterAnchor,
+  cleanup,
+  deaccent,
+  dehyphenate,
+  titleCase,
+  toLines,
+} from "./text";
 import type { LabelField } from "./types";
 
 export interface FieldExtraction {
@@ -147,48 +155,6 @@ const NONE: FieldExtraction = { value: null, confidence: 0 };
 /** Bullet separators used by specialty labels to list tasting notes. */
 const BULLET_SPLIT = /\s*[•·∙‣・▪◦‧|/]\s*/;
 const BULLET_CHAR = /[•·∙‣・▪◦‧]/;
-
-/** Lower-case and strip diacritics so `LAVÉ` and `lave` compare equal. */
-function deaccent(s: string): string {
-  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-}
-
-/**
- * Join words split across a line break by a trailing hyphen
- * ("GRIL-\nLÉE" → "GRILLÉE"). Labels hyphenate freely to fit narrow columns;
- * de-hyphenating before line-splitting keeps each note/word as one token so the
- * bullet/anchor extractors and the scorer see the real word.
- */
-function dehyphenate(raw: string): string {
-  return raw.replace(/[­‐‑-]\s*\r?\n\s*/g, "");
-}
-
-function toLines(raw: string): string[] {
-  return raw
-    .split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter(Boolean);
-}
-
-/** Strip surrounding punctuation/whitespace and collapse internal runs. */
-function cleanup(s: string): string {
-  return s
-    .replace(/\s+/g, " ")
-    .replace(/^[\s:;,.\---|]+|[\s:;,.\---|]+$/g, "")
-    .trim();
-}
-
-function titleCase(s: string): string {
-  return s.replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-/** If `line` matches `anchor`, return the cleaned text that follows it. */
-function afterAnchor(line: string, anchor: RegExp): string | null {
-  const m = line.match(anchor);
-  if (!m || m.index === undefined) return null;
-  const rest = cleanup(line.slice(m.index + m[0].length));
-  return rest || null;
-}
 
 // --- Anchors (EN + FR, including the dataset's `ORIG.`/`PROC.` abbreviations).
 const ROASTER_ANCHOR =

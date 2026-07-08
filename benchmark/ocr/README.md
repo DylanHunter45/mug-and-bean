@@ -25,10 +25,29 @@ benchmark/ocr/run.ts        ← orchestrates the run, writes the report
 benchmark/ocr/labels/        ← the image dataset (git-ignored binaries)
 benchmark/ocr/ground-truth.json ← known answers, one row per image
 benchmark/ocr/results/       ← generated .md + .json reports (git-ignored)
+benchmark/ocr/capture-samples.ts ← dumps real OCR text → ocr-samples.json
+benchmark/ocr/ocr-samples.json   ← committed OCR transcriptions (test fixture)
 ```
 
 The `src/lib/ocr/*` layer is framework-agnostic on purpose — the chosen provider
 and parser get reused by `POST /api/scan` and the parser.
+
+## OCR text fixtures for the production parser
+
+The production label parser (`src/lib/scan/label-parser.ts`) is accuracy-tested
+against **real OCR transcriptions** without needing images or credentials in CI.
+`capture-samples.ts` runs the label collection through Google Vision once and
+writes each transcription to `ocr-samples.json` (keyed by `file` to join with
+`ground-truth.json`); the parser's test suite reads that committed fixture.
+
+```bash
+npm run benchmark:ocr:capture              # re-capture all labels
+npm run benchmark:ocr:capture -- --limit=5 # a quick subset
+```
+
+Re-run it only when the label set or the OCR engine changes. The captured text
+is the same French label data already committed in `ground-truth.json`, so it
+adds nothing new to the public repo (and, like ground truth, contains no keys).
 
 ## Setup
 

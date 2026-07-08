@@ -6,6 +6,12 @@
  * Vision), and returns the raw extracted text. Structured field parsing is a
  * later stage - this returns the transcription only.
  *
+ * The raw text is then run through the label parser, which returns the
+ * structured, per-field result (with confidence bands) the confirmation UI
+ * edits - so the client gets both the transcription and a first parse in one
+ * round-trip. The parser fuzzy-matches the roaster against the catalog, so the
+ * known roasters are loaded and passed in.
+ *
  * Every attempt is written to the `scan_logs` ledger (for accuracy monitoring),
  * and that same ledger backs a per-user rate limit (10 billable scans / hour)
  * so OCR spend can't run away. Ledger reads/writes go through the service-role
@@ -21,6 +27,7 @@ import {
   googleVisionProvider,
   hasGoogleCredentials,
 } from "@/lib/ocr/providers";
+import { parseLabel, type KnownRoaster } from "@/lib/scan/label-parser";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   runScan,
@@ -29,6 +36,7 @@ import {
   type ScanLogEntry,
   type ScanStore,
 } from "@/lib/scan/ocr-service";
+import type { createClient } from "@/lib/supabase/server";
 
 /** Map an upload-rejection reason to its HTTP status + message. */
 const IMAGE_ERRORS: Record<
@@ -47,7 +55,7 @@ const IMAGE_ERRORS: Record<
 };
 
 export async function POST(request: Request) {
-  const { userId } = await authGate();
+  const { userId, supabase } = await authGate();
   if (!userId) return apiError("unauthorized", 401);
 
   // Fail clearly if the engine isn't configured, rather than burning a
@@ -104,11 +112,37 @@ export async function POST(request: Request) {
     return apiError("ocr_failed", 502);
   }
 
+  const parsed = parseLabel(outcome.text, {
+    knownRoasters: await loadKnownRoasters(supabase),
+  });
+
   return NextResponse.json({
     text: outcome.text,
     confidence: outcome.confidence,
     latencyMs: outcome.latencyMs,
+    parsed,
   });
+}
+
+/**
+ * Load the catalog's roasters (id + name) so the parser can fuzzy-match the
+ * scanned roaster to a known entity. The whole list is fetched deliberately:
+ * the match considers every label line, not just the parser's first guess, so
+ * it can recover a roaster the raw heuristic put on the wrong line - which is
+ * where most of the roaster-accuracy lift comes from. At the current catalog
+ * size this is a cheap read; if the roaster table grows large, narrow this with
+ * a `search_roasters` (pg_trgm) pre-filter on the OCR text. A read failure is
+ * non-fatal: the parser still returns the raw extraction, just unmatched.
+ */
+async function loadKnownRoasters(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+): Promise<KnownRoaster[]> {
+  const { data, error } = await supabase.from("roasters").select("id, name");
+  if (error) {
+    console.error("roaster catalog load failed:", error);
+    return [];
+  }
+  return (data ?? []) as KnownRoaster[];
 }
 
 /**

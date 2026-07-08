@@ -306,6 +306,51 @@ export function canonicalFlavourTags(notes: string[]): FlavourTag[] {
   return out;
 }
 
+/**
+ * Extract every canonical flavour tag named anywhere in a free-text notes blob.
+ *
+ * The seed pipeline already has notes as a clean array, but the OCR scan path
+ * gets one run-on string - the specialty bullet separators between notes are
+ * printed as glyphs that OCR reads as plain spaces ("CACAO NOISETTES ORANGE").
+ * So instead of splitting on punctuation, this greedily scans the text against
+ * the controlled vocabulary longest-phrase-first, so "chocolat au lait" resolves
+ * to Milk Chocolate rather than a bare Chocolate + two unknown words. Tags are
+ * de-duplicated by slug, in first-seen order. Words not in the vocabulary are
+ * skipped (never dropped destructively - the caller keeps the raw string too).
+ */
+export function extractFlavourTags(text: string): FlavourTag[] {
+  const words = key(text).split(" ").filter(Boolean);
+  // Longest multi-word key in the vocabulary bounds the look-ahead window.
+  const maxPhrase = Object.keys(FLAVOUR_RULES).reduce(
+    (max, k) => Math.max(max, k.split(" ").length),
+    1,
+  );
+
+  const seen = new Set<string>();
+  const out: FlavourTag[] = [];
+  let i = 0;
+  while (i < words.length) {
+    let matchedLen = 0;
+    for (let len = Math.min(maxPhrase, words.length - i); len >= 1; len--) {
+      const rule = FLAVOUR_RULES[words.slice(i, i + len).join(" ")];
+      if (!rule) continue;
+      const tag: FlavourTag = {
+        name: rule.name,
+        slug: slugify(rule.name),
+        category: rule.category,
+      };
+      if (!seen.has(tag.slug)) {
+        seen.add(tag.slug);
+        out.push(tag);
+      }
+      matchedLen = len;
+      break;
+    }
+    i += matchedLen || 1;
+  }
+  return out;
+}
+
 /** Clean a proper-noun field (name, region, varietal) for display storage. */
 export function cleanDisplay(raw: string): string {
   return clean(raw);
