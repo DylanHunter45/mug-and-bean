@@ -4,6 +4,7 @@ import {
   CAMERA_CONSTRAINTS,
   blobToFile,
   classifyCameraError,
+  focusAtPoint,
   isCameraCaptureSupported,
   scanFileName,
   stopStream,
@@ -108,6 +109,55 @@ describe("blobToFile", () => {
   it("generates a name when none is given", () => {
     const file = blobToFile(new Blob(["x"], { type: "image/jpeg" }));
     expect(file.name).toMatch(/^label-\d+\.jpg$/);
+  });
+});
+
+describe("focusAtPoint", () => {
+  it("returns false when the platform exposes no focus control", async () => {
+    const track = { getCapabilities: () => ({}) };
+    const stream = {
+      getVideoTracks: () => [track],
+    } as unknown as MediaStream;
+    await expect(focusAtPoint(stream, 0.5, 0.5)).resolves.toBe(false);
+  });
+
+  it("returns false with no stream or no video track", async () => {
+    await expect(focusAtPoint(null, 0.5, 0.5)).resolves.toBe(false);
+    const empty = { getVideoTracks: () => [] } as unknown as MediaStream;
+    await expect(focusAtPoint(empty, 0.5, 0.5)).resolves.toBe(false);
+  });
+
+  it("applies a single-shot focus at the clamped point where supported", async () => {
+    const applyConstraints = vi.fn().mockResolvedValue(undefined);
+    const track = {
+      getCapabilities: () => ({ focusMode: ["single-shot", "continuous"] }),
+      applyConstraints,
+    };
+    const stream = {
+      getVideoTracks: () => [track],
+    } as unknown as MediaStream;
+
+    // y is out of range and must be clamped into [0, 1].
+    await expect(focusAtPoint(stream, 0.25, 1.5)).resolves.toBe(true);
+    expect(applyConstraints).toHaveBeenCalledWith({
+      advanced: [
+        {
+          focusMode: "single-shot",
+          pointsOfInterest: [{ x: 0.25, y: 1 }],
+        },
+      ],
+    });
+  });
+
+  it("returns false when applyConstraints rejects", async () => {
+    const track = {
+      getCapabilities: () => ({ focusMode: ["continuous"] }),
+      applyConstraints: vi.fn().mockRejectedValue(new Error("nope")),
+    };
+    const stream = {
+      getVideoTracks: () => [track],
+    } as unknown as MediaStream;
+    await expect(focusAtPoint(stream, 0.5, 0.5)).resolves.toBe(false);
   });
 });
 

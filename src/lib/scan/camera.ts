@@ -33,6 +33,10 @@ export const CAMERA_CONSTRAINTS: MediaStreamConstraints = {
     facingMode: { ideal: "environment" },
     width: { ideal: 1920 },
     height: { ideal: 1080 },
+    // Prefer continuous autofocus where the platform exposes it (Android
+    // Chrome); silently ignored where it doesn't (iOS Safari autofocuses on
+    // its own). Keeps the live preview sharp without a manual tap.
+    advanced: [{ focusMode: "continuous" } as MediaTrackConstraintSet],
   },
   audio: false,
 };
@@ -158,4 +162,51 @@ export function blobToFile(
 /** Stop every track on a stream - always call before dropping a stream ref. */
 export function stopStream(stream: MediaStream | null | undefined): void {
   stream?.getTracks().forEach((track) => track.stop());
+}
+
+function clamp01(n: number): number {
+  return Math.min(1, Math.max(0, n));
+}
+
+/**
+ * Best-effort tap-to-focus. Where the platform exposes focus controls (mainly
+ * Android Chrome) this aims the lens at a normalized (0-1) point and asks for a
+ * refocus. iOS Safari doesn't expose these, so it resolves `false` and the OS
+ * keeps auto-focusing on its own - the caller can treat both the same. `x`/`y`
+ * are fractions of the displayed frame (0,0 = top-left).
+ */
+export async function focusAtPoint(
+  stream: MediaStream | null | undefined,
+  x: number,
+  y: number,
+): Promise<boolean> {
+  const track = stream?.getVideoTracks?.()[0];
+  if (!track || typeof track.getCapabilities !== "function") return false;
+
+  // focusMode / pointsOfInterest aren't in the DOM typings yet, hence the cast.
+  const caps = track.getCapabilities() as MediaTrackCapabilities & {
+    focusMode?: string[];
+  };
+  const modes = caps.focusMode ?? [];
+  if (modes.length === 0) return false; // no focus control to drive
+
+  const mode = modes.includes("single-shot")
+    ? "single-shot"
+    : modes.includes("continuous")
+      ? "continuous"
+      : modes[0];
+
+  try {
+    await track.applyConstraints({
+      advanced: [
+        {
+          focusMode: mode,
+          pointsOfInterest: [{ x: clamp01(x), y: clamp01(y) }],
+        } as MediaTrackConstraintSet,
+      ],
+    });
+    return true;
+  } catch {
+    return false;
+  }
 }

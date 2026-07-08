@@ -21,6 +21,7 @@ import {
   blobToFile,
   captureFrameToBlob,
   classifyCameraError,
+  focusAtPoint,
   isCameraCaptureSupported,
   stopStream,
 } from "@/lib/scan/camera";
@@ -37,8 +38,17 @@ export interface ScanCameraProps {
 export function ScanCamera({ onCapture, className }: ScanCameraProps) {
   const [phase, setPhase] = useState<Phase>("initializing");
   const [error, setError] = useState<CameraError | null>(null);
+  // A transient reticle at the last tapped point, cleared after it pulses.
+  const [focusRing, setFocusRing] = useState<{
+    x: number;
+    y: number;
+    id: number;
+  } | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const focusTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   // Tear down the live stream. Kept in a ref-based callback so both the effect
   // cleanup and the error path release the camera light promptly.
@@ -110,11 +120,33 @@ export function ScanCamera({ onCapture, className }: ScanCameraProps) {
     [onCapture],
   );
 
+  // Tap the viewfinder to refocus at that spot (where the platform allows it),
+  // and drop a reticle so the tap feels acknowledged even when it doesn't.
+  const handleFocusTap = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      if (phase !== "streaming") return;
+      const rect = event.currentTarget.getBoundingClientRect();
+      const px = event.clientX - rect.left;
+      const py = event.clientY - rect.top;
+      const id = Date.now();
+      setFocusRing({ x: px, y: py, id });
+      clearTimeout(focusTimer.current);
+      focusTimer.current = setTimeout(() => {
+        setFocusRing((cur) => (cur?.id === id ? null : cur));
+      }, 700);
+      void focusAtPoint(streamRef.current, px / rect.width, py / rect.height);
+    },
+    [phase],
+  );
+
+  // Clear any pending reticle timer on unmount.
+  useEffect(() => () => clearTimeout(focusTimer.current), []);
+
   const showViewfinder = phase === "initializing" || phase === "streaming";
 
   return (
     <div className={className}>
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-card border border-line bg-ink/95 sm:aspect-[4/3]">
+      <div className="relative aspect-[3/4] max-h-[60dvh] w-full overflow-hidden rounded-card border border-line bg-ink/95 sm:aspect-[4/3] sm:max-h-none">
         {showViewfinder ? (
           <>
             <video
@@ -122,10 +154,19 @@ export function ScanCamera({ onCapture, className }: ScanCameraProps) {
               playsInline
               muted
               autoPlay
-              aria-label="Live camera preview"
-              className="h-full w-full object-cover"
+              aria-label="Live camera preview - tap to focus"
+              onClick={handleFocusTap}
+              className="h-full w-full cursor-crosshair object-cover"
             />
             <ViewfinderFrame />
+            {focusRing && (
+              <span
+                key={focusRing.id}
+                aria-hidden
+                className="pointer-events-none absolute h-16 w-16 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full border-2 border-paper/90"
+                style={{ left: focusRing.x, top: focusRing.y }}
+              />
+            )}
             {phase === "initializing" && (
               <div className="absolute inset-0 flex items-center justify-center bg-ink/70">
                 <p className="font-mono text-eyebrow uppercase tracking-wide text-paper/80">
@@ -189,7 +230,7 @@ function ViewfinderFrame() {
         <span className="absolute bottom-0 right-0 h-7 w-7 border-b-2 border-r-2 border-paper/70" />
       </div>
       <p className="absolute bottom-4 left-0 right-0 text-center font-mono text-eyebrow uppercase tracking-wide text-paper/70">
-        Frame the label
+        Frame the label · tap to focus
       </p>
     </div>
   );
