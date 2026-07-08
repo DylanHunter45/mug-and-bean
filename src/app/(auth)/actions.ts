@@ -16,6 +16,7 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { friendlyAuthMessage } from "@/lib/auth/errors";
 import { LOGIN_PATH, safeRedirectPath } from "@/lib/auth/routes";
 import { createClient } from "@/lib/supabase/server";
 
@@ -38,7 +39,13 @@ export async function signIn(formData: FormData): Promise<void> {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    redirect(withParams(LOGIN_PATH, { error: error.message, redirect: next }));
+    redirect(
+      withParams(LOGIN_PATH, {
+        error: friendlyAuthMessage(error.message, error.code),
+        email,
+        redirect: next,
+      }),
+    );
   }
 
   revalidatePath("/", "layout");
@@ -64,21 +71,74 @@ export async function signUp(formData: FormData): Promise<void> {
   });
 
   if (error) {
-    redirect(withParams(SIGNUP_PATH, { error: error.message, redirect: next }));
+    redirect(
+      withParams(SIGNUP_PATH, {
+        error: friendlyAuthMessage(error.message, error.code),
+        email,
+        redirect: next,
+      }),
+    );
   }
 
   revalidatePath("/", "layout");
 
   // With email confirmation OFF (local default), signUp returns a live session
   // and the user is signed in immediately. With it ON (hosted), there is no
-  // session yet - send them to log in with a "check your email" notice.
+  // session yet - send them to log in with a "check your email" notice. We pass
+  // `email` along so the login page can offer a "resend confirmation" control
+  // (re-running signUp on an existing address does NOT re-send the email).
   if (data.session) {
     redirect(next);
   }
 
   redirect(
     withParams(LOGIN_PATH, {
-      message: "Check your email to confirm your account, then sign in.",
+      message:
+        "Check your email to confirm your account, then sign in. It can take a minute - check your spam folder too.",
+      email,
+      redirect: next,
+    }),
+  );
+}
+
+/**
+ * Re-send the signup confirmation email for a pending (unconfirmed) address.
+ *
+ * Needed because calling `signUp` again on an existing email does NOT send a
+ * fresh link - Supabase treats it as a repeat signup (anti-enumeration) and
+ * stays silent. `auth.resend` is the supported way to re-issue the link. Still
+ * subject to the mailer's rate limit, surfaced via `friendlyAuthMessage`.
+ */
+export async function resendConfirmation(formData: FormData): Promise<void> {
+  const email = String(formData.get("email") ?? "");
+  const next = safeRedirectPath(formData.get("redirect")?.toString());
+  const origin =
+    (await headers()).get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: {
+      emailRedirectTo: withParams(`${origin}/auth/confirm`, { next }),
+    },
+  });
+
+  if (error) {
+    redirect(
+      withParams(LOGIN_PATH, {
+        error: friendlyAuthMessage(error.message, error.code),
+        email,
+        redirect: next,
+      }),
+    );
+  }
+
+  redirect(
+    withParams(LOGIN_PATH, {
+      message:
+        "Confirmation email re-sent. Check your inbox (and spam) - the link is single-use, so open it directly.",
+      email,
       redirect: next,
     }),
   );

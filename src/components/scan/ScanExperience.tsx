@@ -9,13 +9,15 @@
  * best camera in hand, so it leads with <ScanCamera> and hides the (pointless)
  * "scan with your phone" QR. Whatever the source, a captured File flows into the
  * same preview + Retake/Continue UI - manual, webcam, upload, and handoff are
- * indistinguishable downstream. "Continue" is a placeholder until OCR lands.
+ * indistinguishable downstream. "Continue" runs OCR and shows the raw reading;
+ * the structured confirmation form that consumes it lands in a later step.
  */
 import { useEffect, useState } from "react";
 
 import { DesktopHandoff } from "./DesktopHandoff";
 import { ScanCamera } from "./ScanCamera";
 import { buttonClasses } from "@/components/ui";
+import { scanLabel, type ScanClientResult } from "@/lib/scan/scan-client";
 
 type Source = "handoff" | "device";
 
@@ -25,6 +27,8 @@ export function ScanExperience() {
   // null until we've detected the device, to avoid a hydration flash.
   const [source, setSource] = useState<Source | null>(null);
   const [isTouch, setIsTouch] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [result, setResult] = useState<ScanClientResult | null>(null);
 
   // Detect a touch/coarse pointer once mounted; default the primary source.
   useEffect(() => {
@@ -36,7 +40,10 @@ export function ScanExperience() {
   }, []);
 
   // Object URLs must be revoked or they leak - tie the URL to the captured file.
+  // A fresh capture (or retake) also clears any previous scan result.
   useEffect(() => {
+    setResult(null);
+    setScanning(false);
     if (!captured) {
       setPreviewUrl(null);
       return;
@@ -45,6 +52,13 @@ export function ScanExperience() {
     setPreviewUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [captured]);
+
+  async function runScan() {
+    if (!captured) return;
+    setScanning(true);
+    setResult(await scanLabel(captured));
+    setScanning(false);
+  }
 
   if (captured && previewUrl) {
     return (
@@ -71,13 +85,41 @@ export function ScanExperience() {
           </button>
           <button
             type="button"
-            disabled
-            title="Reading the label is coming soon"
+            onClick={runScan}
+            disabled={scanning}
             className={buttonClasses({ size: "md" })}
           >
-            Continue
+            {scanning ? "Reading label..." : "Continue"}
           </button>
         </div>
+
+        {result && !result.ok && (
+          <p
+            role="alert"
+            className="mt-5 rounded-card border border-cherry/40 bg-cherry/5 px-4 py-3 text-center text-sm text-cherry-deep"
+          >
+            {result.message}
+          </p>
+        )}
+
+        {result && result.ok && (
+          <div className="mt-6">
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="font-mono text-eyebrow uppercase tracking-wide text-survey">
+                Raw label reading
+              </span>
+              <span className="font-mono text-eyebrow uppercase tracking-wide text-muted">
+                {result.confidence != null
+                  ? `${Math.round(result.confidence * 100)}% conf`
+                  : "conf n/a"}{" "}
+                · {result.latencyMs}ms
+              </span>
+            </div>
+            <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap rounded-card border border-line bg-surface-2 p-4 font-mono text-sm text-ink-soft">
+              {result.text || "(no text detected)"}
+            </pre>
+          </div>
+        )}
       </div>
     );
   }
